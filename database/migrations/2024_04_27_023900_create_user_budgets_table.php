@@ -20,9 +20,9 @@ return new class extends Migration
             $table->unsignedSmallInteger('type');
             $table->foreign('type')->references('id')->on('budget_type');
 
+            $table->decimal('alloc_budget', 15, 2);
+
             $table->timestamps();
-
-
         });
 
     }
