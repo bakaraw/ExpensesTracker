@@ -11,20 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_budgets', function (Blueprint $table) {
-            $table->id('budget_id');
+        Schema::create('transactions', function (Blueprint $table) {
+            $table->id('transaction_id');
 
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
 
-            $table->unsignedSmallInteger('type');
-            $table->foreign('type')->references('id')->on('budget_type');
+            $table->text('description')->nullable();
+            $table->decimal('amount', 15, 2);
+
+            $table->unsignedSmallInteger('category');
+            $table->foreign('category')->references('id')->on('expenses_category');
+
+            $table->tinyInteger('is_moneyout');
 
             $table->timestamps();
-
-
         });
-
     }
 
     /**
@@ -32,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_budgets');
+        Schema::dropIfExists('transactions');
     }
 };

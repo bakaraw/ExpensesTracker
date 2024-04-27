@@ -15,6 +15,7 @@ return new class extends Migration
             $table->unsignedSmallInteger('id')->primary()->autoIncrement();
             $table->string('name', 255);
         });
+
     }
 
     /**
