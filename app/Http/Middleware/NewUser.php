@@ -20,7 +20,7 @@ class NewUser
         $user = DB::table('user_budgets')->where('user_id', Auth()->user()->getAuthIdentifier())->first();
 
         if($user == null){
-            return redirect('/new_user_setup');
+            return redirect('/welcome');
         }
         return $next($request);
     }

@@ -20,8 +20,16 @@ Route::middleware('auth')->group(function () {
 });
 
 
-Route::get('/new_user_setup', [NewUserController::class, 'index']);
+Route::get('/welcome', [NewUserController::class, 'index'])->middleware(['auth', 'verified']);
 
-Route::post('/new_user_submit', [NewUserController::class, 'newUserSetup'])->name('new_user.submit');
+Route::get('/new_user_setup', function(){
+    return view('auth.new-user-setup');
+})->middleware(['auth', 'verified'])->name('new_user.set-up');
+
+Route::get('/portion_budget', function(){
+    return view('auth.portion-budget');
+})->middleware(['auth', 'verified',  NewUser::class])->name('new_user.portion');
+
+Route::post('/new_user_submit', [NewUserController::class, 'newUserSetup'])->middleware(['auth', 'verified'])->name('new_user.submit');
 
 require __DIR__.'/auth.php';
