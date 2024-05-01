@@ -33,6 +33,9 @@ class NewUserController extends Controller
             $userBudget->type = $request->input('budget_type');
             $userBudget->alloc_budget = $request->input('alloc_budget');
             $userBudget->save();
+
+            app(BudgetPortionsController::class)->setDefaultPortion($userBudget->alloc_budget);
+
         } else {
             UserBudget::whereIn('user_id', [$user_id])
                 ->update([
