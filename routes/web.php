@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BudgetPortionsController;
 use App\Http\Controllers\NewUserController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -20,16 +21,12 @@ Route::middleware('auth')->group(function () {
 });
 
 
-Route::get('/welcome', [NewUserController::class, 'index'])->middleware(['auth', 'verified']);
+Route::get('/welcome', [NewUserController::class, 'initializeUser'])->middleware(['auth', 'verified']);
 
-Route::get('/new_user_setup', function(){
-    return view('auth.new-user-setup');
-})->middleware(['auth', 'verified'])->name('new_user.set-up');
+Route::get('/new_user_setup', [NewUserController::class, 'index'])->middleware(['auth', 'verified'])->name('new_user.set-up');
 
-Route::get('/portion_budget', function(){
-    return view('auth.portion-budget');
-})->middleware(['auth', 'verified',  NewUser::class])->name('new_user.portion');
+// Route::post('/portion_your_budget', [BudgetPortionsController::class, 'newUserPortion'])->middleware(['auth', 'verified'])->name('portion.budget');
 
-Route::post('/new_user_submit', [NewUserController::class, 'newUserSetup'])->middleware(['auth', 'verified'])->name('new_user.submit');
+Route::post('/portion_your_budget', [NewUserController::class, 'newUserSetup'])->middleware(['auth', 'verified'])->name('new_user.submit');
 
 require __DIR__.'/auth.php';

@@ -13,27 +13,27 @@ class ExpenseCategorySeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('expenses_category')->insert([
+        DB::table('expense_categories')->insert([
             'name' => 'Food',
         ]);
 
-        DB::table('expenses_category')->insert([
+        DB::table('expense_categories')->insert([
             'name' => 'Bills',
         ]);
 
-        DB::table('expenses_category')->insert([
+        DB::table('expense_categories')->insert([
             'name' => 'Internet',
         ]);
 
-        DB::table('expenses_category')->insert([
+        DB::table('expense_categories')->insert([
             'name' => 'Entertainment',
         ]);
 
-        DB::table('expenses_category')->insert([
+        DB::table('expense_categories')->insert([
             'name' => 'Shopping',
         ]);
 
-        DB::table('expenses_category')->insert([
+        DB::table('expense_categories')->insert([
             'name' => 'Savings',
         ]);
 

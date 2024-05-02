@@ -21,7 +21,7 @@ return new class extends Migration
             $table->decimal('amount', 15, 2);
 
             $table->unsignedSmallInteger('category');
-            $table->foreign('category')->references('id')->on('expenses_category');
+            $table->foreign('category')->references('id')->on('expense_categories');
 
             $table->tinyInteger('is_moneyout');
 

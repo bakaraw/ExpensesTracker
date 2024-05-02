@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BudgetPortions;
+use App\Models\ExpenseCategory;
 use Illuminate\Http\Request;
 use App\Models\UserBudget;
 use Illuminate\Support\Facades\DB;
 
 class NewUserController extends Controller
 {
-    public function index(Request $request)
+    public function initializeUser(Request $request)
     {
 
         $user = DB::table('user_budgets')->where('user_id', Auth()->user()->getAuthIdentifier())->first();
@@ -35,7 +37,6 @@ class NewUserController extends Controller
             $userBudget->save();
 
             app(BudgetPortionsController::class)->setDefaultPortion($userBudget->alloc_budget);
-
         } else {
             UserBudget::whereIn('user_id', [$user_id])
                 ->update([
@@ -43,7 +44,19 @@ class NewUserController extends Controller
                     'alloc_budget' => $request->input('alloc_budget')
                 ]);
         }
+        $budget = DB::table('user_budgets')->where('user_id', $user_id)->first();
+        $categories = ExpenseCategory::all();
+        $budget_portions = DB::table('budget_portions')->where('budget_id', $budget->budget_id)->get();
 
-        return redirect('/portion_budget');
+        return view('auth.portion-budget', [
+            'budget' => $request->input('alloc_budget'),
+            'budget_portions' => $budget_portions,
+            'categories' => $categories
+        ]);
+    }
+
+    public function index()
+    {
+        return view('auth.new-user-setup');
     }
 }

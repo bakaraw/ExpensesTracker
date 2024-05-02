@@ -22,6 +22,7 @@ class NewUser
         if($user == null){
             return redirect('/welcome');
         }
+
         return $next($request);
     }
 }

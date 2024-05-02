@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\BudgetPortions;
 use Illuminate\Http\Request;
 use App\Models\UserBudget;
+use Illuminate\Support\Facades\DB;
 
 class BudgetPortionsController extends Controller
 {
     public function setDefaultPortion($user_budget_alloc)
     {
+        $user_id = Auth()->user()->getAuthIdentifier();
         $user_budget = UserBudget::where('user_id', Auth()->user()->getAuthIdentifier())->first();
 
         $portion_percentage = [
@@ -33,8 +35,6 @@ class BudgetPortionsController extends Controller
             ],
         ];
 
-        // i is iterator
-
         foreach ($portion_percentage as $portions) {
             $budget_portion = new BudgetPortions();
             $budget_portion->budget_id = $user_budget->budget_id;
@@ -43,6 +43,12 @@ class BudgetPortionsController extends Controller
             $budget_portion->save();
         }
     }
+
+    public function newUserPortion(){
+        $user_id = Auth()->user()->getAuthIdentifier();
+
+    }
+
     /**
      * Display a listing of the resource.
      */

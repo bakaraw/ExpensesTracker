@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
 
-        Schema::create('expenses_category', function (Blueprint $table){
+        Schema::create('expense_categories', function (Blueprint $table){
             $table->unsignedSmallInteger('id')->primary()->autoIncrement();
             $table->string('name', 255);
         });
@@ -24,7 +24,7 @@ return new class extends Migration
             $table->foreign('budget_id')->references('budget_id')->on('user_budgets');
 
             $table->unsignedSmallInteger('category');
-            $table->foreign('category')->references('id')->on('expenses_category');
+            $table->foreign('category')->references('id')->on('expense_categories');
 
             $table->decimal('portion', 15, 2);
 
@@ -38,6 +38,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('budget_portions');
-        Schema::dropIfExists('expenses_category');
+        Schema::dropIfExists('expense_categories');
     }
 };
