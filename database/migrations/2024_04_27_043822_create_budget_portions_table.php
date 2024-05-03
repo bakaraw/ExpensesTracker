@@ -15,6 +15,7 @@ return new class extends Migration
         Schema::create('expense_categories', function (Blueprint $table){
             $table->unsignedSmallInteger('id')->primary()->autoIncrement();
             $table->string('name', 255);
+            $table->string('icon', 355);
         });
 
         Schema::create('budget_portions', function (Blueprint $table) {

@@ -6,6 +6,8 @@ use App\Models\BudgetPortions;
 use Illuminate\Http\Request;
 use App\Models\UserBudget;
 use Illuminate\Support\Facades\DB;
+use App\Models\ExpenseCategory;
+use Illuminate\Support\Facades\Log;
 
 class BudgetPortionsController extends Controller
 {
@@ -44,10 +46,55 @@ class BudgetPortionsController extends Controller
         }
     }
 
-    public function newUserPortion(){
+    public function newUserPortion()
+    {
         $user_id = Auth()->user()->getAuthIdentifier();
-
     }
+
+    public function editPortion(Request $request)
+    {
+        $user_id = Auth()->user()->getAuthIdentifier();
+        $portion_id = $request->input('portion_id');
+        $portion = $request->input('portion');
+        $budget_table = DB::table('user_budgets')->where('user_id', $user_id);
+        $budget = $budget_table->first();
+        $budget_portion_table = DB::table('budget_portions')->where('budget_id', $budget->budget_id);
+
+
+
+        if ($request->input('action') == 'save') {
+
+            BudgetPortions::whereIn('portion_id', [$portion_id])
+                ->update([
+                    'portion' => $portion
+                ]);
+
+            $sum_of_portions = $budget_portion_table->sum('portion');
+            UserBudget::whereIn('budget_id', [$budget->budget_id])
+                ->update([
+                    'alloc_budget' => $sum_of_portions
+                ]);
+        } else {
+            BudgetPortions::whereIn('portion_id', [$portion_id])->delete();
+
+            $sum_of_portions = $budget_portion_table->sum('portion');
+            UserBudget::whereIn('budget_id', [$budget->budget_id])
+                ->update([
+                    'alloc_budget' => $sum_of_portions
+                ]);
+        }
+
+        $budget = $budget_table->first();
+        $categories = ExpenseCategory::all();
+        $budget_portions = $budget_portion_table->get();
+
+        return view('auth.portion-budget', [
+            'budget' => $budget->alloc_budget,
+            'budget_portions' => $budget_portions,
+            'categories' => $categories
+        ]);
+    }
+
 
     /**
      * Display a listing of the resource.

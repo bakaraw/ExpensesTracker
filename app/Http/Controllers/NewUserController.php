@@ -46,12 +46,13 @@ class NewUserController extends Controller
         }
         $budget = DB::table('user_budgets')->where('user_id', $user_id)->first();
         $categories = ExpenseCategory::all();
-        $budget_portions = DB::table('budget_portions')->where('budget_id', $budget->budget_id)->get();
-
+        $budget_portion_table = DB::table('budget_portions')->where('budget_id', $budget->budget_id);
+        $budget_portions = $budget_portion_table->get();
+        $sum_of_portions = $budget_portion_table->sum('portion');
         return view('auth.portion-budget', [
-            'budget' => $request->input('alloc_budget'),
+            'budget' => $budget->alloc_budget,
             'budget_portions' => $budget_portions,
-            'categories' => $categories
+            'categories' => $categories,
         ]);
     }
 
