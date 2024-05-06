@@ -7,10 +7,13 @@ use Illuminate\Http\Request;
 use App\Models\UserBudget;
 use Illuminate\Support\Facades\DB;
 use App\Models\ExpenseCategory;
+use App\SafeSubmit\SafeSubmit;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class BudgetPortionsController extends Controller
 {
+
     public function setDefaultPortion($user_budget_alloc)
     {
         $user_id = Auth()->user()->getAuthIdentifier();
@@ -51,47 +54,74 @@ class BudgetPortionsController extends Controller
         $user_id = Auth()->user()->getAuthIdentifier();
     }
 
-    public function editPortion(Request $request)
+    public function editPortion(Request $request, SafeSubmit $safeSubmit)
     {
+
         $user_id = Auth()->user()->getAuthIdentifier();
         $portion_id = $request->input('portion_id');
         $portion = $request->input('portion');
         $budget_table = DB::table('user_budgets')->where('user_id', $user_id);
         $budget = $budget_table->first();
-        $budget_portion_table = DB::table('budget_portions')->where('budget_id', $budget->budget_id);
 
-
-
-        if ($request->input('action') == 'save') {
-
-            BudgetPortions::whereIn('portion_id', [$portion_id])
-                ->update([
-                    'portion' => $portion
-                ]);
-
-            $sum_of_portions = $budget_portion_table->sum('portion');
-            UserBudget::whereIn('budget_id', [$budget->budget_id])
-                ->update([
-                    'alloc_budget' => $sum_of_portions
-                ]);
+        if ($request->input('action') === 'save') {
+            $this->updatePortion($portion_id, $portion);
         } else {
-            BudgetPortions::whereIn('portion_id', [$portion_id])->delete();
-
-            $sum_of_portions = $budget_portion_table->sum('portion');
-            UserBudget::whereIn('budget_id', [$budget->budget_id])
-                ->update([
-                    'alloc_budget' => $sum_of_portions
-                ]);
+            $this->deletePortion($portion_id);
         }
+        $this->updateAllocatedBudget($budget->budget_id);
 
+        return $safeSubmit->intended(route('show.portion'));
+    }
+
+    public function addPortion(Request $request, SafeSubmit $safeSubmit)
+    {
+
+
+        $user_id = Auth()->user()->getAuthIdentifier();
+        $budget_table = DB::table('user_budgets')->where('user_id', $user_id);
         $budget = $budget_table->first();
+
+        $this->store($request, $budget->budget_id);
+        $this->updateAllocatedBudget($budget->budget_id);
+
+        return $safeSubmit->intended(route('show.portion'));
+    }
+
+    public function showPortion()
+    {
+
+
+        $user_id = Auth()->user()->getAuthIdentifier();
+        $budget_table = DB::table('user_budgets')->where('user_id', $user_id);
+        $budget = $budget_table->first();
+        $budget_portion_table = DB::table('budget_portions')->where('budget_id', $budget->budget_id);
+        $budget = UserBudget::where('user_id', $user_id)->first();
         $categories = ExpenseCategory::all();
         $budget_portions = $budget_portion_table->get();
 
         return view('auth.portion-budget', [
             'budget' => $budget->alloc_budget,
             'budget_portions' => $budget_portions,
-            'categories' => $categories
+             'categories' => $categories
+        ]);
+    }
+
+    private function updatePortion($portion_id, $portion)
+    {
+        BudgetPortions::where('portion_id', $portion_id)->update(['portion' => $portion]);
+    }
+
+    private function deletePortion($portion_id)
+    {
+        BudgetPortions::where('portion_id', $portion_id)->delete();
+    }
+
+    private function updateAllocatedBudget($budget_id)
+    {
+        $sum_of_portions = DB::table('budget_portions')->where('budget_id', $budget_id)->sum('portion');
+
+        UserBudget::where('budget_id', $budget_id)->update([
+            'alloc_budget' => $sum_of_portions
         ]);
     }
 
@@ -115,9 +145,15 @@ class BudgetPortionsController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, $budget_id)
     {
-        //
+        $budgetPortions = new BudgetPortions();
+        $budgetPortions->budget_id = $budget_id;
+        $budgetPortions->category = $request->input('category');
+        $budgetPortions->portion = $request->input('portion');
+        $budgetPortions->save();
+
+        return;
     }
 
     /**
@@ -139,9 +175,8 @@ class BudgetPortionsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, BudgetPortions $budgetPortions)
+    public function update($column, $value, $updateArray)
     {
-        //
     }
 
     /**

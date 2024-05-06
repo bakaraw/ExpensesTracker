@@ -26,9 +26,10 @@ class NewUserController extends Controller
     public function newUserSetup(Request $request)
     {
         $user_id = Auth()->user()->getAuthIdentifier();
-        $user = DB::table('user_budgets')->where('user_id', $user_id)->first();
+        $budget = DB::table('user_budgets')->where('user_id', $user_id)->first();
+        $budget_id = 0;
 
-        if ($user == null) {
+        if ($budget == null) {
             $userId = auth()->user()->getAuthIdentifier();
             $userBudget = new UserBudget();
             $userBudget->user_id = $userId;
@@ -44,16 +45,10 @@ class NewUserController extends Controller
                     'alloc_budget' => $request->input('alloc_budget')
                 ]);
         }
+
         $budget = DB::table('user_budgets')->where('user_id', $user_id)->first();
-        $categories = ExpenseCategory::all();
-        $budget_portion_table = DB::table('budget_portions')->where('budget_id', $budget->budget_id);
-        $budget_portions = $budget_portion_table->get();
-        $sum_of_portions = $budget_portion_table->sum('portion');
-        return view('auth.portion-budget', [
-            'budget' => $budget->alloc_budget,
-            'budget_portions' => $budget_portions,
-            'categories' => $categories,
-        ]);
+        $budget_id = $budget->budget_id;
+        return redirect()->route('show.portion', [$budget_id]);
     }
 
     public function index()

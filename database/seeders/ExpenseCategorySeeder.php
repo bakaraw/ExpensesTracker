@@ -80,7 +80,7 @@ class ExpenseCategorySeeder extends Seeder
 
         DB::table('expense_categories')->insert([
             'name' => 'Tax',
-            'icon' => 'fas fa-money-check-dollar'
+            'icon' => 'fas fa-money-check'
         ]);
 
     }
