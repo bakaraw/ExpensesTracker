@@ -16,7 +16,6 @@ class BudgetPortionsController extends Controller
 
     public function setDefaultPortion($user_budget_alloc)
     {
-        $user_id = Auth()->user()->getAuthIdentifier();
         $user_budget = UserBudget::where('user_id', Auth()->user()->getAuthIdentifier())->first();
 
         $portion_percentage = [
@@ -49,10 +48,6 @@ class BudgetPortionsController extends Controller
         }
     }
 
-    public function newUserPortion()
-    {
-        $user_id = Auth()->user()->getAuthIdentifier();
-    }
 
     public function editPortion(Request $request, SafeSubmit $safeSubmit)
     {
