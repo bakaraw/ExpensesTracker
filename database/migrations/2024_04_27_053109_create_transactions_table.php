@@ -17,13 +17,13 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
 
-            $table->text('description')->nullable();
+            $table->text('note')->nullable();
             $table->decimal('amount', 15, 2);
 
-            $table->unsignedSmallInteger('category');
+            $table->unsignedSmallInteger('category')->nullable();
             $table->foreign('category')->references('id')->on('expense_categories');
 
-            $table->tinyInteger('is_moneyout');
+            $table->tinyInteger('is_money_out');
 
             $table->timestamps();
         });

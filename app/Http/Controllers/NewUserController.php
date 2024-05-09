@@ -48,7 +48,7 @@ class NewUserController extends Controller
 
         $budget = DB::table('user_budgets')->where('user_id', $user_id)->first();
         $budget_id = $budget->budget_id;
-        return redirect()->route('show.portion', [$budget_id]);
+        return redirect()->route('show.portion');
     }
 
     public function index()

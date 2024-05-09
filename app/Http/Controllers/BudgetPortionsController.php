@@ -8,8 +8,6 @@ use App\Models\UserBudget;
 use Illuminate\Support\Facades\DB;
 use App\Models\ExpenseCategory;
 use App\SafeSubmit\SafeSubmit;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 
 class BudgetPortionsController extends Controller
 {
@@ -84,7 +82,6 @@ class BudgetPortionsController extends Controller
 
     public function showPortion()
     {
-
 
         $user_id = Auth()->user()->getAuthIdentifier();
         $budget_table = DB::table('user_budgets')->where('user_id', $user_id);

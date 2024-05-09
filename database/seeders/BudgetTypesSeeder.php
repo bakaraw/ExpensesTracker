@@ -13,15 +13,15 @@ class BudgetTypesSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('budget_type')->insert([
+        DB::table('budget_types')->insert([
             'name' => 'daily',
         ]);
 
-        DB::table('budget_type')->insert([
+        DB::table('budget_types')->insert([
             'name' => 'weekly',
         ]);
 
-        DB::table('budget_type')->insert([
+        DB::table('budget_types')->insert([
             'name' => 'monthly',
         ]);
 

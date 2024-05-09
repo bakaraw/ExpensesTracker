@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('budget_type', function (Blueprint $table) {
+        Schema::create('budget_types', function (Blueprint $table) {
             $table->unsignedSmallInteger('id')->primary()->autoIncrement();
             $table->string('name', 255);
         });
@@ -23,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('budget_type');
+        Schema::dropIfExists('budget_types');
     }
 };
