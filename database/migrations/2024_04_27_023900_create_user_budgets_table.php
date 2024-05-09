@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users');
 
             $table->unsignedSmallInteger('type');
-            $table->foreign('type')->references('id')->on('budget_type');
+            $table->foreign('type')->references('id')->on('budget_types');
 
             $table->decimal('alloc_budget', 15, 2);
 
