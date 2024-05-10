@@ -2,9 +2,12 @@
 
 namespace Database\Seeders;
 
+use App\Models\Transactions;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Carbon;
 
 class DatabaseSeeder extends Seeder
 {
@@ -24,5 +27,28 @@ class DatabaseSeeder extends Seeder
             BudgetTypesSeeder::class,
             ExpenseCategorySeeder::class
         ]);
+
+        for($i = 0; $i < 53; $i++){
+            DB::table('transactions')->insert([
+                'user_id' => 1,
+                'note' => "none",
+                'amount' => rand(750, 900),
+                'category' => rand(1, 6),
+                'is_money_out' => 0,
+                'created_at' => Carbon::now()->subWeeks($i),
+                'updated_at' => Carbon::now()->subWeeks($i),
+               ]);
+
+               DB::table('transactions')->insert([
+                'user_id' => 1,
+                'note' => "none",
+                'amount' => rand(750, 900),
+                'category' => rand(1, 6),
+                'is_money_out' => 1,
+                'created_at' => Carbon::now()->subWeeks($i),
+                'updated_at' => Carbon::now()->subWeeks($i),
+               ]);
+        }
+
     }
 }
