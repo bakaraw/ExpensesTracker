@@ -32,8 +32,7 @@ class DatabaseSeeder extends Seeder
             DB::table('transactions')->insert([
                 'user_id' => 1,
                 'note' => "none",
-                'amount' => rand(750, 900),
-                'category' => rand(1, 6),
+                'amount' => rand(300, 900),
                 'is_money_out' => 0,
                 'created_at' => Carbon::now()->subWeeks($i),
                 'updated_at' => Carbon::now()->subWeeks($i),
@@ -42,7 +41,7 @@ class DatabaseSeeder extends Seeder
                DB::table('transactions')->insert([
                 'user_id' => 1,
                 'note' => "none",
-                'amount' => rand(750, 900),
+                'amount' => rand(300, 900),
                 'category' => rand(1, 6),
                 'is_money_out' => 1,
                 'created_at' => Carbon::now()->subWeeks($i),

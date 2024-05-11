@@ -11,8 +11,8 @@
         @foreach ($budget_portions as $budget_portion)
             @php
                 // Find the corresponding category from $categories based on category ID
-                array_push($portion_categories, $budget_portion->category);
-                $matching_category = $categories->firstWhere('id', $budget_portion->category);
+                array_push($portion_categories, $budget_portion->category_id);
+                $matching_category = $categories->firstWhere('id', $budget_portion->category_id);
             @endphp
             <button x-data
                 x-on:click="$dispatch('open-modal' , {name : 'portion-modal-{{ $budget_portion->portion_id }}'})"

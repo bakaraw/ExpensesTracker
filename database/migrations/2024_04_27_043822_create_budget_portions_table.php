@@ -24,8 +24,8 @@ return new class extends Migration
             $table->unsignedBigInteger('budget_id');
             $table->foreign('budget_id')->references('budget_id')->on('user_budgets');
 
-            $table->unsignedSmallInteger('category');
-            $table->foreign('category')->references('id')->on('expense_categories');
+            $table->unsignedSmallInteger('category_id');
+            $table->foreign('category_id')->references('id')->on('expense_categories');
 
             $table->decimal('portion', 15, 2);
 

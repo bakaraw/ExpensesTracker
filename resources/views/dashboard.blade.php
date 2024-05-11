@@ -39,7 +39,7 @@
                     class="flex items-center bg-gradient-to-b from-lime-400 to-green-600 overflow-hidden shadow-md sm:rounded-lg flex-1 mr-4 p-4 text-white">
 
                     <div class="flex-1">
-                        <p>Money In</p>
+                        <p>Total Income</p>
                         <h2 class="font-semibold text-xl text-white leading-tight">Php
                             @if ($sum_money_in > 0)
                                 {{ number_format($sum_money_in) }}
@@ -63,7 +63,7 @@
                 <div
                     class="flex items-center bg-gradient-to-b from-amber-500 to-orange-600 overflow-hidden shadow-md sm:rounded-lg flex-1 mr-4 p-4 text-white">
                     <div class="flex-1">
-                        <p>Money Out</p>
+                        <p>Total Expenses</p>
                         <h2 class="font-semibold text-xl text-white leading-tight">Php
                             @if ($sum_money_out > 0)
                                 {{ number_format($sum_money_out) }}
@@ -128,7 +128,7 @@
             <!-- Separate "hello" div on a new row -->
             <div class="my-5 sm:mt-0 flex flex-col sm:flex-row justify-center sm:justify-between">
                 <!-- Chart div -->
-                <div class="mt-4 bg-white p-4 rounded-lg w-full sm:w-2/3 shadow-md flex flex-col">
+                <div class="mt-4 bg-white p-4 rounded-lg w-full sm:w-2/3 shadow-md flex flex-col ">
                     <div class="flex items-center justify-between mb-4">
                         <div>
                             <h1 class="font-semibold text-xl">
@@ -162,32 +162,29 @@
                     </div>
                     <div>
 
-                        <div class="tab-panel" role="tabpanel" id="tabpanel-1">
-                            @php
-
-                            @endphp
+                        <div class="tab-panel " role="tabpanel" id="tabpanel-1">
                             <canvas id="dailyChart"></canvas>
-                            {{-- <x-chart-js name="dailyChart" moneyoutdata="{{$money_out_data}}" moneyindata="{{$money_in_data}}"></x-chart-js> --}}
-
                         </div>
                         <div class="tab-panel hidden opacity-0" role="tabpanel" id="tabpanel-2">
                             <canvas id="weeklyChart"></canvas>
-                            {{-- <x-chart-js name="weeklyChart" moneyoutdata="{{$money_out_data}}" moneyindata="{{$money_in_data}}"></x-chart-js> --}}
                         </div>
                         <div class="tab-panel hidden opacity-0" role="tabpanel" id="tabpanel-3">
                             <canvas id="monthlyChart"></canvas>
-                            {{-- <x-chart-js name="monthlyChart" moneyoutdata="{{$money_out_data}}" moneyindata="{{$money_in_data}}"></x-chart-js> --}}
                         </div>
                     </div>
 
                 </div>
 
-
-
                 <!-- Other div -->
-                <div class="mt-4 bg-gray-200 p-4 rounded-lg w-full sm:w-1/3 sm:ml-4">
-                    {{ $m_money_out_data }}
-                    Other div
+                <div class="mt-4 bg-white p-4 rounded-lg w-full sm:w-1/3 sm:ml-4">
+                    <h1 class="font-light text-xl mb-1">Budget Status</h1>
+                    <h1 class="font-medium text-2xl">Php {{ $sum_money_out }} / {{ $alloc_budget }}</h1>
+                    <div>
+                        @foreach ($budget_portions as $budget_portion)
+                            <p>{{ $budget_portion->category->name }} - {{ $budget_portion->portion }}</p>
+                        @endforeach
+
+                    </div>
                 </div>
             </div>
 
@@ -350,6 +347,8 @@
                 })
             })
         </script>
+
+        {{-- for the daily chart --}}
         <script>
             const dailyctx = document.getElementById('dailyChart');
             const dailydata = {
@@ -404,6 +403,8 @@
             }
             new Chart(dailyctx, dailyconfig);
         </script>
+
+        {{-- for the weekly chart --}}
         <script>
             const weeklyctx = document.getElementById('weeklyChart');
             const weeklydata = {
@@ -452,11 +453,11 @@
             new Chart(weeklyctx, weeklyconfig);
         </script>
 
+        {{-- monthly chart --}}
         <script>
             const monthlyctx = document.getElementById('monthlyChart');
             const monthlydata = {
-                datasets: [
-                    {
+                datasets: [{
                         label: 'Money-in',
                         data: <?php echo $m_money_in_data; ?>,
                         borderColor: 'rgb(132, 204, 22)',

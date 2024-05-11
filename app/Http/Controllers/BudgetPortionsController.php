@@ -40,7 +40,7 @@ class BudgetPortionsController extends Controller
         foreach ($portion_percentage as $portions) {
             $budget_portion = new BudgetPortions();
             $budget_portion->budget_id = $user_budget->budget_id;
-            $budget_portion->category = $portions['id'];
+            $budget_portion->category_id = $portions['id'];
             $budget_portion->portion = $user_budget_alloc * $portions['portion'];
             $budget_portion->save();
         }
@@ -94,7 +94,7 @@ class BudgetPortionsController extends Controller
         return view('auth.portion-budget', [
             'budget' => $budget->alloc_budget,
             'budget_portions' => $budget_portions,
-             'categories' => $categories
+            'categories' => $categories
         ]);
     }
 
