@@ -50,7 +50,7 @@ class TransactionsController extends Controller
         $transactions->user_id = $user_id;
         $transactions->note = $note;
         $transactions->amount = $amount;
-        $transactions->category = $category;
+        $transactions->category_id = $category;
         $transactions->is_money_out = $is_money_out;
 
         $transactions->save();

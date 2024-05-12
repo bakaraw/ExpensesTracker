@@ -20,8 +20,8 @@ return new class extends Migration
             $table->text('note')->nullable();
             $table->decimal('amount', 15, 2);
 
-            $table->unsignedSmallInteger('category')->nullable();
-            $table->foreign('category')->references('id')->on('expense_categories');
+            $table->unsignedSmallInteger('category_id')->nullable();
+            $table->foreign('category_id')->references('id')->on('expense_categories');
 
             $table->tinyInteger('is_money_out');
 

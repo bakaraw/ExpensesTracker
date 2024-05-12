@@ -42,7 +42,7 @@ class DatabaseSeeder extends Seeder
                 'user_id' => 1,
                 'note' => "none",
                 'amount' => rand(300, 900),
-                'category' => rand(1, 6),
+                'category_id' => rand(1, 6),
                 'is_money_out' => 1,
                 'created_at' => Carbon::now()->subWeeks($i),
                 'updated_at' => Carbon::now()->subWeeks($i),

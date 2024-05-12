@@ -86,15 +86,12 @@ class DashboardController extends Controller
 
         $budget = $this->getUserBudget();
         $budget_id = $budget->budget_id;
-        $portion_categories = BudgetPortions::where('budget_id', $budget_id)->get();
 
-        $categories = [];
+        $portion_categories = BudgetPortions::with('category')
+            ->where('budget_id', $budget_id)
+            ->get();
 
-        foreach ($portion_categories as $portion_category) {
-            array_push($categories, $portion_category->category_id);
-        }
-
-        return $categories;
+        return $portion_categories;
     }
 
     public function getSum($is_money_out, $user_budget)
@@ -154,7 +151,7 @@ class DashboardController extends Controller
             case $daily_id:
                 $currentDate = Carbon::now();
                 $sum = $transactions->whereDate('created_at', $currentDate->toDateString())
-                    ->where('category', $savings_category)
+                    ->where('category_id', $savings_category)
                     ->sum('amount');
                 break;
             case $weekly_id:
@@ -168,7 +165,7 @@ class DashboardController extends Controller
                 $currentMonthStart = Carbon::now()->startOfMonth();
                 $endDate = Carbon::now();
                 $sum = $transactions->whereBetween('created_at', [$currentMonthStart, $endDate])
-                    ->where('category', $savings_category)
+                    ->where('category_id', $savings_category)
                     ->sum('amount');
                 break;
         }

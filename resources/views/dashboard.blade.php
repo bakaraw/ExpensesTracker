@@ -176,12 +176,24 @@
                 </div>
 
                 <!-- Other div -->
-                <div class="mt-4 bg-white p-4 rounded-lg w-full sm:w-1/3 sm:ml-4">
+                <div class="mt-4 bg-white p-4 shadow-md rounded-lg w-full sm:w-1/3 sm:ml-4">
                     <h1 class="font-light text-xl mb-1">Budget Status</h1>
-                    <h1 class="font-medium text-2xl">Php {{ $sum_money_out }} / {{ $alloc_budget }}</h1>
+                    <h1 class="font-black text-2xl">Php {{ $sum_money_out }} / {{ $alloc_budget }}</h1>
                     <div>
                         @foreach ($budget_portions as $budget_portion)
-                            <p>{{ $budget_portion->category->name }} - {{ $budget_portion->portion }}</p>
+                        <div class="bg-gray-200 shadow-md rounded-full py-2 px-4 mt-3 items-center grid grid-cols-2">
+                            <div class="col-span-1 ">
+                                <h1>
+                                    <i class="mr-5 fa-solid {{$budget_portion->category->icon}}"></i>
+                                    {{ $budget_portion->category->name }}
+                                </h1>
+                            </div>
+
+                            <div class="col-span-1 ">
+                                <h2>{{ $budget_portion->portion }}</h2>
+                            </div>
+
+                        </div>
                         @endforeach
 
                     </div>
@@ -238,13 +250,9 @@
                             <select
                                 class="w-full text-black border border-gray-300 rounded-md py-2 px-4 mb-3 cursor-pointer"
                                 name="category">
-
                                 @foreach ($user_portion_categories as $user_portion_category)
-                                    @foreach ($categories as $category)
-                                        @if ($category->id == $user_portion_category)
-                                            <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                        @endif
-                                    @endforeach
+                                    <option value="{{ $user_portion_category->category->id }}">
+                                        {{ $user_portion_category->category->name }}</option>
                                 @endforeach
                             </select>
                         </div>
