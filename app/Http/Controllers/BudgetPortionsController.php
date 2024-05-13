@@ -141,7 +141,7 @@ class BudgetPortionsController extends Controller
     {
         $budgetPortions = new BudgetPortions();
         $budgetPortions->budget_id = $budget_id;
-        $budgetPortions->category = $request->input('category');
+        $budgetPortions->category_id = $request->input('category');
         $budgetPortions->portion = $request->input('portion');
         $budgetPortions->save();
 

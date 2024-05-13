@@ -366,7 +366,7 @@
                         borderColor: 'rgb(132, 204, 22)',
                         backgroundColor: 'rgba(132, 204, 22, 0.5)',
                         borderWidth: 3,
-                        pointRadius: 0,
+                        pointRadius: 0.3,
                         fill: true
                     },
                     {
@@ -375,7 +375,7 @@
                         borderColor: 'rgb(234, 88, 12)',
                         backgroundColor: 'rgba(234, 88, 12, 0.3)',
                         borderWidth: 3,
-                        pointRadius: 0,
+                        pointRadius: 0.3,
                         fill: true
                     },
 
@@ -422,7 +422,7 @@
                         borderColor: 'rgb(132, 204, 22)',
                         backgroundColor: 'rgba(132, 204, 22, 0.5)',
                         borderWidth: 3,
-                        pointRadius: 0,
+                        pointRadius: 0.3,
                         fill: true
                     },
                     {
@@ -431,7 +431,7 @@
                         borderColor: 'rgb(234, 88, 12)',
                         backgroundColor: 'rgba(234, 88, 12, 0.3)',
                         borderWidth: 3,
-                        pointRadius: 0,
+                        pointRadius: 0.3,
                         fill: true
                     },
 
@@ -471,7 +471,7 @@
                         borderColor: 'rgb(132, 204, 22)',
                         backgroundColor: 'rgba(132, 204, 22, 0.5)',
                         borderWidth: 3,
-                        pointRadius: 0,
+                        pointRadius: 0.3,
                         fill: true
                     },
                     {
@@ -480,7 +480,7 @@
                         borderColor: 'rgb(234, 88, 12)',
                         backgroundColor: 'rgba(234, 88, 12, 0.3)',
                         borderWidth: 3,
-                        pointRadius: 0,
+                        pointRadius: 0.3,
                         fill: true
                     },
 
