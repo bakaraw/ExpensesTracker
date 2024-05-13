@@ -10,8 +10,7 @@ use App\Models\ExpenseCategory;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
-
-use function PHPUnit\Framework\isNull;
+use Illuminate\Support\Facades\Log;
 
 class DashboardController extends Controller
 {
@@ -28,6 +27,7 @@ class DashboardController extends Controller
         $data = [
             'budget_portions' => $this->getBudgetPortions($user_budget),
             'alloc_budget' => $this->getAllocBudget($user_budget),
+            'trans_with_category' => $this->getTransactionsWithCategory($money_out, $user_budget),
             'sum_money_in' => $money_in_sum,
             'sum_money_out' => $money_out_sum,
             'sum_savings' => $this->getSavingsSum($user_budget),
@@ -45,6 +45,55 @@ class DashboardController extends Controller
         ];
 
         return view('dashboard', $data);
+    }
+
+    public function getTransactionsWithCategory($is_money_out, $user_budget)
+    {
+
+        $transactions = Transactions::with('category')
+            ->where('user_id', $this->userId());
+        $budget_portions = $this->getBudgetPortions($user_budget);
+
+        $daily_id = $this->getTypeId('daily');
+        $weekly_id = $this->getTypeId('weekly');
+        $monthly_id = $this->getTypeId('monthly');
+
+        $sum = -1;
+
+        $totalTransactionArr = [];
+        foreach ($budget_portions as $budget_portion) {
+            switch ($user_budget->type) {
+                case $daily_id:
+                    $currentDate = Carbon::now();
+                    $sum = $transactions->whereDate('created_at', $currentDate->toDateString())
+                        ->where('is_money_out', $is_money_out)
+                        ->where('category_id', $budget_portion->category_id)
+                        ->sum('amount');
+                    break;
+                case $weekly_id:
+                    $currentWeekStart = Carbon::now()->startOfWeek();
+                    $endDate = Carbon::now();
+                    $sum = Transactions::with('category')
+                        ->where('user_id', $this->userId())
+                        ->whereBetween('created_at', [$currentWeekStart, $endDate])
+                        ->where('category_id', $budget_portion->category->id)
+                        ->sum('amount');
+                    $totalTransactionArr[$budget_portion->category->name] = $sum;
+                    Log::debug('weekly: ' . $budget_portion->category->name . ' Sum: ' . $sum);
+                    break;
+                case $monthly_id:
+                    $currentMonthStart = Carbon::now()->startOfMonth();
+                    $endDate = Carbon::now();
+                    $sum = $transactions->whereBetween('created_at', [$currentMonthStart, $endDate])
+                        ->where('is_money_out', $is_money_out)
+                        ->where('category_id', $budget_portion->category_id)
+                        ->sum('amount');
+                    break;
+            }
+        }
+
+
+        return $totalTransactionArr;
     }
 
     public function getBudgetPortions($user_budget)

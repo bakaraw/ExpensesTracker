@@ -1,22 +1,22 @@
 <x-app-layout>
     @php
-        $_budget_type = 0;
+    $_budget_type = 0;
 
-        switch ($budget_type_name) {
-            case 'daily':
-                $_budget_type = 'Day';
-                break;
-            case 'weekly':
-                $_budget_type = 'Week';
-                break;
-            case 'monthly':
-                $_budget_type = 'Month';
-                break;
+    switch ($budget_type_name) {
+    case 'daily':
+    $_budget_type = 'Day';
+    break;
+    case 'weekly':
+    $_budget_type = 'Week';
+    break;
+    case 'monthly':
+    $_budget_type = 'Month';
+    break;
 
-            default:
-                $_budget_type = 'Irror';
-                break;
-        }
+    default:
+    $_budget_type = 'Irror';
+    break;
+    }
     @endphp
 
     <x-slot name="header">
@@ -42,9 +42,9 @@
                         <p>Total Income</p>
                         <h2 class="font-semibold text-xl text-white leading-tight">Php
                             @if ($sum_money_in > 0)
-                                {{ number_format($sum_money_in) }}
+                            {{ number_format($sum_money_in) }}
                             @else
-                                0.00
+                            0.00
                             @endif
 
                         </h2>
@@ -66,9 +66,9 @@
                         <p>Total Expenses</p>
                         <h2 class="font-semibold text-xl text-white leading-tight">Php
                             @if ($sum_money_out > 0)
-                                {{ number_format($sum_money_out) }}
+                            {{ number_format($sum_money_out) }}
                             @else
-                                0.00
+                            0.00
                             @endif
                         </h2>
                     </div>
@@ -87,9 +87,9 @@
                         <p>Savings</p>
                         <h2 class="font-semibold text-xl text-white leading-tight">Php
                             @if ($sum_savings > 0)
-                                {{ number_format($sum_savings) }}
+                            {{ number_format($sum_savings) }}
                             @else
-                                0.00
+                            0.00
                             @endif
                         </h2>
                     </div>
@@ -107,36 +107,35 @@
                     <p>Largest Spent</p>
                     <h2 class="font-semibold text-xl text-white leading-tight">Php
                         @if (isset($largest_spent))
-                            @if ($largest_spent->amount > 0)
-                                {{ number_format($largest_spent->amount) }}
-                            @endif
+                        @if ($largest_spent->amount > 0)
+                        {{ number_format($largest_spent->amount) }}
+                        @endif
                         @else
-                            0.00
+                        0.00
                         @endif
 
                     </h2>
                     <p class="font-small">
                         @if (isset($largest_spent))
-                            {{ $largest_spent_cat_name }}
+                        {{ $largest_spent_cat_name }}
                         @else
-                            ---
+                        ---
                         @endif
                     </p>
                 </div>
             </div>
 
-            <!-- Separate "hello" div on a new row -->
-            <div class="my-5 sm:mt-0 flex flex-col sm:flex-row justify-center sm:justify-between">
+            <div class="my-5 sm:mt-0 flex flex-col sm:flex-row md:flex-row justify-center sm:justify-between">
                 <!-- Chart div -->
                 <div class="mt-4 bg-white p-4 rounded-lg w-full sm:w-2/3 shadow-md flex flex-col ">
                     <div class="flex items-center justify-between mb-4">
                         <div>
                             <h1 class="font-semibold text-xl">
                                 @php
-                                    $date = date('Y-m-d');
-                                    $month = date('M', strtotime($date));
-                                    $day = date('d', strtotime($date));
-                                    $day_w = date('D', strtotime($date));
+                                $date = date('Y-m-d');
+                                $month = date('M', strtotime($date));
+                                $day = date('d', strtotime($date));
+                                $day_w = date('D', strtotime($date));
                                 @endphp
                                 {{ $month }} {{ $day }}, {{ $day_w }}
                             </h1>
@@ -146,16 +145,16 @@
                             <div
                                 class="absolute indicator w-28 bottom-0 top-0 left-0 rounded-xl my-auto h-11 bg-gray-600 shadow-sm">
                             </div>
-                            <button role="tab" aria-selected="false" aria-controls="tabpanel-1" id="tab-1"
-                                tabindex="0" class="relative block h-10 px-6 tab rounded-xl">
+                            <button role="tab" aria-selected="false" aria-controls="tabpanel-1" id="tab-1" tabindex="0"
+                                class="relative block h-10 px-6 tab rounded-xl">
                                 <span class="text-white">Daily</span>
                             </button>
-                            <button role="tab" aria-selected="false" aria-controls="tabpanel-2" id="tab-2"
-                                tabindex="0" class="relative block h-10 px-6 tab rounded-xl">
+                            <button role="tab" aria-selected="false" aria-controls="tabpanel-2" id="tab-2" tabindex="0"
+                                class="relative block h-10 px-6 tab rounded-xl">
                                 <span class="text-gray-500">Weekly</span>
                             </button>
-                            <button role="tab" aria-selected="false" aria-controls="tabpanel-3" id="tab-3"
-                                tabindex="0" class="relative block h-10 px-6 tab rounded-xl">
+                            <button role="tab" aria-selected="false" aria-controls="tabpanel-3" id="tab-3" tabindex="0"
+                                class="relative block h-10 px-6 tab rounded-xl">
                                 <span class="text-gray-500">Monthly</span>
                             </button>
                         </div>
@@ -177,26 +176,60 @@
 
                 <!-- Other div -->
                 <div class="mt-4 bg-white p-4 shadow-md rounded-lg w-full sm:w-1/3 sm:ml-4">
-                    <h1 class="font-light text-xl mb-1">Budget Status</h1>
-                    <h1 class="font-black text-2xl">Php {{ $sum_money_out }} / {{ $alloc_budget }}</h1>
-                    <div>
-                        @foreach ($budget_portions as $budget_portion)
-                        <div class="bg-gray-200 shadow-md rounded-full py-2 px-4 mt-3 items-center grid grid-cols-2">
-                            <div class="col-span-1 ">
-                                <h1>
-                                    <i class="mr-5 fa-solid {{$budget_portion->category->icon}}"></i>
-                                    {{ $budget_portion->category->name }}
-                                </h1>
-                            </div>
+                    <div class="flex justify-between">
+                        <div>
+                            <h1 class="font-light text-xl mb-1">Budget Status</h1>
+                            <h1 class="font-black text-2xl">Php {{ $sum_money_out }} / {{ $alloc_budget }}</h1>
+                            @if($sum_money_out > $alloc_budget)
 
-                            <div class="col-span-1 ">
-                                <h2>{{ $budget_portion->portion }}</h2>
-                            </div>
+                            <h1 class="text-red-600 font-medium">You exceeded your allocated budget this {{$_budget_type}}</h1>
+                            <h1 class="text-red-600 text-sm">It looks like you have been spending a lot</h1>
 
+                            @endif
                         </div>
-                        @endforeach
+                        <div>
+                            <button class="text-black font-extralight text-sm">
+                                <i class="fa-solid fa-pen-to-square"></i>
 
+                            </button>
+                        </div>
                     </div>
+
+                    <div class="scroll-smooth max-h-96 snap-y overflow-y-auto">
+                        @foreach ($budget_portions as $budget_portion)
+                            @php
+                                $percentage = ($trans_with_category[$budget_portion->category->name] / $budget_portion->portion) * 100;
+
+                                if ($percentage > 100) {
+                                    $percentage = 100;
+                                }
+                            @endphp
+                            <div class="bg-gray-100 shadow-md rounded-full py-1 px-4 mt-3 flex items-center snap-center">
+                                <div class="w-2/5 pr-4">
+                                    <h1 class="flex items-center font-small text-sm">
+                                        <i class="mr-4 fa-solid {{ $budget_portion->category->icon }}"></i>
+                                        {{ $budget_portion->category->name }}
+                                    </h1>
+                                </div>
+
+                                <div class="w-3/5 relative">
+                                    <div class="h-4 bg-white rounded-full w-full">
+                                        <!-- Adjust width based on progress percentage -->
+                                        <div class="h-full
+                                            @if ($percentage < 60) bg-green-500
+                                            @elseif ($percentage >= 60 && $percentage < 90) bg-orange-500
+                                            @else bg-red-500 @endif
+                                            rounded-full" style="width: {{ $percentage }}%;"></div>
+                                    </div>
+                                    <div class="flex justify-between text-sm mt-1">
+                                        <span>Php {{ $trans_with_category[$budget_portion->category->name] }}</span>
+                                        <span>/ {{ $budget_portion->portion }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+
                 </div>
             </div>
 
@@ -207,7 +240,7 @@
     <x-my-modal name="money-in-modal" width="max-w-lg" height="310">
         <x-slot name="header">
             <h1 class="text-black text-2xl">
-                Money-In
+                Add Income
             </h1>
         </x-slot>
         <x-slot name="body">
@@ -234,7 +267,7 @@
     <x-my-modal name="money-out-modal" width="max-w-lg" height="310">
         <x-slot name="header">
             <h1 class="text-black text-2xl">
-                Money-Out
+                Add Expense
             </h1>
         </x-slot>
         <x-slot name="body">
@@ -251,8 +284,8 @@
                                 class="w-full text-black border border-gray-300 rounded-md py-2 px-4 mb-3 cursor-pointer"
                                 name="category">
                                 @foreach ($user_portion_categories as $user_portion_category)
-                                    <option value="{{ $user_portion_category->category->id }}">
-                                        {{ $user_portion_category->category->name }}</option>
+                                <option value="{{ $user_portion_category->category->id }}">
+                                    {{ $user_portion_category->category->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -361,7 +394,7 @@
             const dailyctx = document.getElementById('dailyChart');
             const dailydata = {
                 datasets: [{
-                        label: 'Money-in',
+                        label: 'Income',
                         data: <?php echo $money_in_data; ?>,
                         borderColor: 'rgb(132, 204, 22)',
                         backgroundColor: 'rgba(132, 204, 22, 0.5)',
@@ -370,7 +403,7 @@
                         fill: true
                     },
                     {
-                        label: 'Money-out',
+                        label: 'Expenses',
                         data: <?php echo $money_out_data; ?>,
                         borderColor: 'rgb(234, 88, 12)',
                         backgroundColor: 'rgba(234, 88, 12, 0.3)',
@@ -406,6 +439,7 @@
                             position: 'top',
                             align: 'end',
                         },
+
                     }
                 }
             }
@@ -417,7 +451,7 @@
             const weeklyctx = document.getElementById('weeklyChart');
             const weeklydata = {
                 datasets: [{
-                        label: 'Money-in',
+                        label: 'Income',
                         data: <?php echo $w_money_in_data; ?>,
                         borderColor: 'rgb(132, 204, 22)',
                         backgroundColor: 'rgba(132, 204, 22, 0.5)',
@@ -426,7 +460,7 @@
                         fill: true
                     },
                     {
-                        label: 'Money-out',
+                        label: 'Expenses',
                         data: <?php echo $w_money_out_data; ?>,
                         borderColor: 'rgb(234, 88, 12)',
                         backgroundColor: 'rgba(234, 88, 12, 0.3)',
@@ -466,7 +500,7 @@
             const monthlyctx = document.getElementById('monthlyChart');
             const monthlydata = {
                 datasets: [{
-                        label: 'Money-in',
+                        label: 'Income',
                         data: <?php echo $m_money_in_data; ?>,
                         borderColor: 'rgb(132, 204, 22)',
                         backgroundColor: 'rgba(132, 204, 22, 0.5)',
@@ -475,7 +509,7 @@
                         fill: true
                     },
                     {
-                        label: 'Money-out',
+                        label: 'Expenses',
                         data: <?php echo $m_money_out_data; ?>,
                         borderColor: 'rgb(234, 88, 12)',
                         backgroundColor: 'rgba(234, 88, 12, 0.3)',
