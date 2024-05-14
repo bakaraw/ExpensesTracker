@@ -1,29 +1,29 @@
 <x-app-layout>
     @php
-        $_budget_type = 0;
+    $_budget_type = 0;
 
-        switch ($budget_type) {
-            case 1:
-                $_budget_type = 'Day';
-                break;
-            case 2:
-                $_budget_type = 'Week';
-                break;
-            case 3:
-                $_budget_type = 'Month';
-                break;
+    switch ($budget_type_name) {
+    case 'daily':
+    $_budget_type = 'Day';
+    break;
+    case 'weekly':
+    $_budget_type = 'Week';
+    break;
+    case 'monthly':
+    $_budget_type = 'Month';
+    break;
 
-            default:
-                $_budget_type = 'Irror';
-                break;
-        }
+    default:
+    $_budget_type = 'Irror';
+    break;
+    }
     @endphp
 
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             Dashboard
         </h2>
-        <h1 class="mt-3 font-light text-lg text-gray-800 leading-tight">
+        <h1 class="mt-1 font-semibold text-2xl text-gray-800 leading-tight">
             This {{ $_budget_type }}'s Expense Summary
         </h1>
 
@@ -36,15 +36,15 @@
                 <!-- Financial data divs -->
 
                 <div
-                    class="flex items-center bg-gradient-to-b from-lime-400 to-green-600 overflow-hidden shadow-sm sm:rounded-lg flex-1 mr-4 p-4 text-white">
+                    class="flex items-center bg-gradient-to-b from-lime-400 to-green-600 overflow-hidden shadow-md sm:rounded-lg flex-1 mr-4 p-4 text-white">
 
                     <div class="flex-1">
-                        <p>Money In</p>
+                        <p>Total Income</p>
                         <h2 class="font-semibold text-xl text-white leading-tight">Php
                             @if ($sum_money_in > 0)
-                                {{ number_format($sum_money_in) }}
+                            {{ number_format($sum_money_in) }}
                             @else
-                                0.00
+                            0.00
                             @endif
 
                         </h2>
@@ -61,14 +61,14 @@
                 </div>
 
                 <div
-                    class="flex items-center bg-gradient-to-b from-amber-500 to-orange-600 overflow-hidden shadow-sm sm:rounded-lg flex-1 mr-4 p-4 text-white">
+                    class="flex items-center bg-gradient-to-b from-amber-500 to-orange-600 overflow-hidden shadow-md sm:rounded-lg flex-1 mr-4 p-4 text-white">
                     <div class="flex-1">
-                        <p>Money Out</p>
+                        <p>Total Expenses</p>
                         <h2 class="font-semibold text-xl text-white leading-tight">Php
                             @if ($sum_money_out > 0)
-                                {{ number_format($sum_money_out) }}
+                            {{ number_format($sum_money_out) }}
                             @else
-                                0.00
+                            0.00
                             @endif
                         </h2>
                     </div>
@@ -82,14 +82,14 @@
                     </button>
                 </div>
                 <div
-                    class="flex items-center bg-gradient-to-b from-yellow-400 to-yellow-600 overflow-hidden shadow-sm sm:rounded-lg flex-1 mr-4 p-4 text-white">
+                    class="flex items-center bg-gradient-to-b from-yellow-400 to-yellow-600 overflow-hidden shadow-md sm:rounded-lg flex-1 mr-4 p-4 text-white">
                     <div class="flex-1">
                         <p>Savings</p>
                         <h2 class="font-semibold text-xl text-white leading-tight">Php
                             @if ($sum_savings > 0)
-                                {{ number_format($sum_savings) }}
+                            {{ number_format($sum_savings) }}
                             @else
-                                0.00
+                            0.00
                             @endif
                         </h2>
                     </div>
@@ -103,37 +103,133 @@
                     </button>
                 </div>
                 <div
-                    class="flex flex-col justify-center bg-gradient-to-b from-slate-500 to-gray-700 overflow-hidden shadow-sm sm:rounded-lg flex-1 p-4 text-white">
+                    class="flex flex-col justify-center bg-gradient-to-b from-slate-500 to-gray-700 overflow-hidden shadow-md sm:rounded-lg flex-1 p-4 text-white">
                     <p>Largest Spent</p>
                     <h2 class="font-semibold text-xl text-white leading-tight">Php
                         @if (isset($largest_spent))
-                            @if ($largest_spent->amount > 0)
-                                {{ number_format($largest_spent->amount) }}
-                            @endif
+                        @if ($largest_spent->amount > 0)
+                        {{ number_format($largest_spent->amount) }}
+                        @endif
                         @else
-                            0.00
+                        0.00
                         @endif
 
                     </h2>
                     <p class="font-small">
                         @if (isset($largest_spent))
-                            {{$largest_spent_cat_name}}
+                        {{ $largest_spent_cat_name }}
                         @else
-                            ---
-                        @endif</p>
+                        ---
+                        @endif
+                    </p>
                 </div>
             </div>
 
-            <!-- Separate "hello" div on a new row -->
-            <div class="my-5 sm:mt-0 flex flex-col sm:flex-row justify-center sm:justify-between">
+            <div class="my-5 sm:mt-0 flex flex-col sm:flex-row md:flex-row justify-center sm:justify-between">
                 <!-- Chart div -->
-                <div class="mt-4 bg-gray-200 p-4 rounded-lg w-full sm:w-2/3">
-                    Chart here
+                <div class="mt-4 bg-white p-4 rounded-lg w-full sm:w-2/3 shadow-md flex flex-col ">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h1 class="font-semibold text-xl">
+                                @php
+                                $date = date('Y-m-d');
+                                $month = date('M', strtotime($date));
+                                $day = date('d', strtotime($date));
+                                $day_w = date('D', strtotime($date));
+                                @endphp
+                                {{ $month }} {{ $day }}, {{ $day_w }}
+                            </h1>
+                        </div>
+                        <div role="tablist" aria-label="tabs"
+                            class="bg-gray-50 relative w-max h-10 grid grid-cols-3 items-center px-[3px] rounded-xl shadow-md overflow-hidden transition">
+                            <div
+                                class="absolute indicator w-28 bottom-0 top-0 left-0 rounded-xl my-auto h-11 bg-gray-600 shadow-sm">
+                            </div>
+                            <button role="tab" aria-selected="false" aria-controls="tabpanel-1" id="tab-1" tabindex="0"
+                                class="relative block h-10 px-6 tab rounded-xl">
+                                <span class="text-white">Daily</span>
+                            </button>
+                            <button role="tab" aria-selected="false" aria-controls="tabpanel-2" id="tab-2" tabindex="0"
+                                class="relative block h-10 px-6 tab rounded-xl">
+                                <span class="text-gray-500">Weekly</span>
+                            </button>
+                            <button role="tab" aria-selected="false" aria-controls="tabpanel-3" id="tab-3" tabindex="0"
+                                class="relative block h-10 px-6 tab rounded-xl">
+                                <span class="text-gray-500">Monthly</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div>
+
+                        <div class="tab-panel " role="tabpanel" id="tabpanel-1">
+                            <canvas id="dailyChart"></canvas>
+                        </div>
+                        <div class="tab-panel hidden opacity-0" role="tabpanel" id="tabpanel-2">
+                            <canvas id="weeklyChart"></canvas>
+                        </div>
+                        <div class="tab-panel hidden opacity-0" role="tabpanel" id="tabpanel-3">
+                            <canvas id="monthlyChart"></canvas>
+                        </div>
+                    </div>
+
                 </div>
 
                 <!-- Other div -->
-                <div class="mt-4 bg-gray-200 p-4 rounded-lg w-full sm:w-1/3 sm:ml-4">
-                    Other div
+                <div class="mt-4 bg-white p-4 shadow-md rounded-lg w-full sm:w-1/3 sm:ml-4">
+                    <div class="flex justify-between">
+                        <div>
+                            <h1 class="font-light text-xl mb-1">Budget Status</h1>
+                            <h1 class="font-black text-2xl">Php {{ $sum_money_out }} / {{ $alloc_budget }}</h1>
+                            @if($sum_money_out > $alloc_budget)
+
+                            <h1 class="text-red-600 font-medium">You exceeded your allocated budget this {{$_budget_type}}</h1>
+                            <h1 class="text-red-600 text-sm">It looks like you have been spending a lot</h1>
+
+                            @endif
+                        </div>
+                        <div>
+                            <button class="text-gray-400 font-extralight text-sm">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                                Edit
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="scroll-smooth max-h-96 snap-y overflow-y-auto">
+                        @foreach ($budget_portions as $budget_portion)
+                            @php
+                                $percentage = ($trans_with_category[$budget_portion->category->name] / $budget_portion->portion) * 100;
+
+                                if ($percentage > 100) {
+                                    $percentage = 100;
+                                }
+                            @endphp
+                            <div class="bg-gray-100 shadow-md rounded-full py-1 px-4 mt-3 flex items-center snap-center">
+                                <div class="w-2/5 pr-4">
+                                    <h1 class="flex items-center font-small text-sm">
+                                        <i class="mr-4 fa-solid {{ $budget_portion->category->icon }}"></i>
+                                        {{ $budget_portion->category->name }}
+                                    </h1>
+                                </div>
+
+                                <div class="w-3/5 relative">
+                                    <div class="h-4 bg-white rounded-full w-full">
+                                        <!-- Adjust width based on progress percentage -->
+                                        <div class="h-full
+                                            @if ($percentage < 60) bg-green-500
+                                            @elseif ($percentage >= 60 && $percentage < 90) bg-orange-500
+                                            @else bg-red-500 @endif
+                                            rounded-full" style="width: {{ $percentage }}%;"></div>
+                                    </div>
+                                    <div class="flex justify-between text-sm mt-1">
+                                        <span>Php {{ $trans_with_category[$budget_portion->category->name] }}</span>
+                                        <span>/ {{ $budget_portion->portion }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+
                 </div>
             </div>
 
@@ -144,7 +240,7 @@
     <x-my-modal name="money-in-modal" width="max-w-lg" height="310">
         <x-slot name="header">
             <h1 class="text-black text-2xl">
-                Money-In
+                Add Income
             </h1>
         </x-slot>
         <x-slot name="body">
@@ -171,7 +267,7 @@
     <x-my-modal name="money-out-modal" width="max-w-lg" height="310">
         <x-slot name="header">
             <h1 class="text-black text-2xl">
-                Money-Out
+                Add Expense
             </h1>
         </x-slot>
         <x-slot name="body">
@@ -187,13 +283,9 @@
                             <select
                                 class="w-full text-black border border-gray-300 rounded-md py-2 px-4 mb-3 cursor-pointer"
                                 name="category">
-
                                 @foreach ($user_portion_categories as $user_portion_category)
-                                    @foreach ($categories as $category)
-                                        @if ($category->id == $user_portion_category)
-                                            <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                        @endif
-                                    @endforeach
+                                <option value="{{ $user_portion_category->category->id }}">
+                                    {{ $user_portion_category->category->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -211,7 +303,6 @@
                 <textarea name="note" id="note"
                     class="w-full border border-gray-300 rounded-lg text-black py-2 px-4 resize-none focus:outline-none h-32"
                     placeholder="Note (Optional)"></textarea>
-
                 <div class="flex justify-center">
                     <button type="submit"
                         class="mb-10 bg-orange-800 px-6 py-2 rounded-full text-white mr-2 hover:bg-orange-700 active:bg-orange-900">Save</button>
@@ -244,7 +335,222 @@
             </form>
         </x-slot>
     </x-my-modal>
-
-
     </div>
+    <x-slot name="scripts">
+        <script type="module">
+            // tabbing in daily/weekly/monthly
+            let tabs = document.querySelectorAll(".tab")
+            let indicator = document.querySelector(".indicator")
+            let panels = document.querySelectorAll(".tab-panel")
+
+            indicator.style.width = tabs[0].getBoundingClientRect().width + 'px'
+            indicator.style.left = tabs[0].getBoundingClientRect().left - tabs[0].parentElement.getBoundingClientRect().left +
+                'px'
+
+            tabs.forEach(tab => {
+                tab.addEventListener("click", () => {
+                    // Get the clicked tab element
+                    const clickedTab = event.currentTarget;
+                    const spanElement = clickedTab.querySelector('span');
+
+                    tabs.forEach(otherTab => {
+                        if (otherTab !== clickedTab) {
+                            const otherSpanElement = otherTab.querySelector('span');
+                            if (otherSpanElement) {
+                                otherSpanElement.classList.remove('text-white');
+                                otherSpanElement.classList.add('text-gray-500');
+                            }
+                        }
+                    });
+
+                    if (spanElement) {
+                        // Change the class of the <span> element for the clicked tab
+                        spanElement.classList.add('text-white');
+                        spanElement.classList.remove('text-gray-500');
+                        // You can add or remove other classes as needed
+                    }
+
+                    let tabTarget = tab.getAttribute("aria-controls")
+
+                    indicator.style.width = tab.getBoundingClientRect().width + 'px'
+                    indicator.style.left = tab.getBoundingClientRect().left - tab.parentElement
+                        .getBoundingClientRect().left + 'px'
+
+
+                    panels.forEach(panel => {
+                        let panelId = panel.getAttribute("id")
+                        if (tabTarget === panelId) {
+                            panel.classList.remove("hidden", "opacity-0")
+                        } else {
+                            panel.classList.add("hidden", "opacity-0")
+                        }
+                    })
+                })
+            })
+        </script>
+
+        {{-- for the daily chart --}}
+        <script>
+            const dailyctx = document.getElementById('dailyChart');
+            const dailydata = {
+                datasets: [{
+                        label: 'Income',
+                        data: <?php echo $money_in_data; ?>,
+                        borderColor: 'rgb(132, 204, 22)',
+                        backgroundColor: 'rgba(132, 204, 22, 0.5)',
+                        borderWidth: 3,
+                        pointRadius: 0.3,
+                        fill: true
+                    },
+                    {
+                        label: 'Expenses',
+                        data: <?php echo $money_out_data; ?>,
+                        borderColor: 'rgb(234, 88, 12)',
+                        backgroundColor: 'rgba(234, 88, 12, 0.3)',
+                        borderWidth: 3,
+                        pointRadius: 0.3,
+                        fill: true
+                    },
+
+                ],
+
+            }
+
+            const dailyconfig = {
+                type: 'line',
+                data: dailydata,
+                options: {
+                    tension: 0.4,
+                    responsive: true,
+                    scales: {
+                        x: {
+                            type: 'time',
+                            time: {
+                                unit: 'day',
+                                parser: 'yyyy-MM-dd'
+                            }
+                        },
+                        y: {
+                            beginAtZero: true
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            align: 'end',
+                        },
+
+                    }
+                }
+            }
+            new Chart(dailyctx, dailyconfig);
+        </script>
+
+        {{-- for the weekly chart --}}
+        <script>
+            const weeklyctx = document.getElementById('weeklyChart');
+            const weeklydata = {
+                datasets: [{
+                        label: 'Income',
+                        data: <?php echo $w_money_in_data; ?>,
+                        borderColor: 'rgb(132, 204, 22)',
+                        backgroundColor: 'rgba(132, 204, 22, 0.5)',
+                        borderWidth: 3,
+                        pointRadius: 0.3,
+                        fill: true
+                    },
+                    {
+                        label: 'Expenses',
+                        data: <?php echo $w_money_out_data; ?>,
+                        borderColor: 'rgb(234, 88, 12)',
+                        backgroundColor: 'rgba(234, 88, 12, 0.3)',
+                        borderWidth: 3,
+                        pointRadius: 0.3,
+                        fill: true
+                    },
+
+                ],
+
+            }
+
+            const weeklyconfig = {
+                type: 'line',
+                data: weeklydata,
+                options: {
+                    tension: 0.4,
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            align: 'end',
+                        },
+                    }
+                }
+            }
+            new Chart(weeklyctx, weeklyconfig);
+        </script>
+
+        {{-- monthly chart --}}
+        <script>
+            const monthlyctx = document.getElementById('monthlyChart');
+            const monthlydata = {
+                datasets: [{
+                        label: 'Income',
+                        data: <?php echo $m_money_in_data; ?>,
+                        borderColor: 'rgb(132, 204, 22)',
+                        backgroundColor: 'rgba(132, 204, 22, 0.5)',
+                        borderWidth: 3,
+                        pointRadius: 0.3,
+                        fill: true
+                    },
+                    {
+                        label: 'Expenses',
+                        data: <?php echo $m_money_out_data; ?>,
+                        borderColor: 'rgb(234, 88, 12)',
+                        backgroundColor: 'rgba(234, 88, 12, 0.3)',
+                        borderWidth: 3,
+                        pointRadius: 0.3,
+                        fill: true
+                    },
+
+                ],
+
+            }
+
+            const monthlyconfig = {
+                type: 'line',
+                data: monthlydata,
+                options: {
+                    tension: 0.4,
+                    responsive: true,
+                    scales: {
+                        x: {
+                            type: 'time',
+                            time: {
+                                unit: 'month',
+                                parser: 'yyyy-MM'
+                            }
+                        },
+                        y: {
+                            beginAtZero: true
+
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            align: 'end',
+                        },
+                    }
+                }
+            }
+            new Chart(monthlyctx, monthlyconfig);
+        </script>
+    </x-slot>
+
 </x-app-layout>

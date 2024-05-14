@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class BudgetPortions extends Model
 {
     use HasFactory;
+
+    public function category()
+    {
+        return $this->belongsTo(ExpenseCategory::class);
+    }
 }

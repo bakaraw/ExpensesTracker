@@ -14,6 +14,8 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard',  [DashboardController::class, 'index'])->middleware(['auth', 'verified', NewUser::class])->name('dashboard');
+Route::get('/budgeting',  [BudgetPortionsController::class, 'index'])->middleware(['auth', 'verified', NewUser::class])->name('budgeting');
+Route::get('/transactions',  [BudgetPortionsController::class, 'index'])->middleware(['auth', 'verified', NewUser::class])->name('transaction');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -25,8 +27,6 @@ Route::middleware('auth')->group(function () {
 Route::get('/welcome', [NewUserController::class, 'initializeUser'])->middleware(['auth', 'verified']);
 
 Route::get('/new_user_setup', [NewUserController::class, 'index'])->middleware(['auth', 'verified'])->name('new_user.set-up');
-
-// Route::post('/portion_your_budget', [BudgetPortionsController::class, 'newUserPortion'])->middleware(['auth', 'verified'])->name('portion.budget');
 
 Route::post('/default_portion', [NewUserController::class, 'newUserSetup'])->middleware(['auth', 'verified'])->name('new_user.submit');
 Route::post('/edit_portion', [BudgetPortionsController::class, 'editPortion'])->middleware(['auth', 'verified', HandleSafeSubmit::class])->name('save.edited-portion');

@@ -8,13 +8,27 @@ use App\Models\UserBudget;
 use Illuminate\Support\Facades\DB;
 use App\Models\ExpenseCategory;
 use App\SafeSubmit\SafeSubmit;
+use App\Http\Controllers\BudgetController;
 
 class BudgetPortionsController extends Controller
 {
 
+    public function index()
+    {
+
+        return view('budgeting', [
+            'alloc_budget' => BudgetController::getBudgetAlloc(),
+            'budget_portions' => BudgetPortionsController::getBudgetPortions(),
+        ]);
+    }
+
+    public function userId(){
+        return Auth()->user()->getAuthIdentifier();
+    }
+
     public function setDefaultPortion($user_budget_alloc)
     {
-        $user_budget = UserBudget::where('user_id', Auth()->user()->getAuthIdentifier())->first();
+        $user_budget = BudgetController::getUserBudget();
 
         $portion_percentage = [
             'food' => [
@@ -40,7 +54,7 @@ class BudgetPortionsController extends Controller
         foreach ($portion_percentage as $portions) {
             $budget_portion = new BudgetPortions();
             $budget_portion->budget_id = $user_budget->budget_id;
-            $budget_portion->category = $portions['id'];
+            $budget_portion->category_id = $portions['id'];
             $budget_portion->portion = $user_budget_alloc * $portions['portion'];
             $budget_portion->save();
         }
@@ -70,7 +84,7 @@ class BudgetPortionsController extends Controller
     {
 
 
-        $user_id = Auth()->user()->getAuthIdentifier();
+        $user_id = $this->userId();
         $budget_table = DB::table('user_budgets')->where('user_id', $user_id);
         $budget = $budget_table->first();
 
@@ -83,7 +97,7 @@ class BudgetPortionsController extends Controller
     public function showPortion()
     {
 
-        $user_id = Auth()->user()->getAuthIdentifier();
+        $user_id = $this->userId();
         $budget_table = DB::table('user_budgets')->where('user_id', $user_id);
         $budget = $budget_table->first();
         $budget_portion_table = DB::table('budget_portions')->where('budget_id', $budget->budget_id);
@@ -94,7 +108,7 @@ class BudgetPortionsController extends Controller
         return view('auth.portion-budget', [
             'budget' => $budget->alloc_budget,
             'budget_portions' => $budget_portions,
-             'categories' => $categories
+            'categories' => $categories
         ]);
     }
 
@@ -117,14 +131,34 @@ class BudgetPortionsController extends Controller
         ]);
     }
 
+    public static function getBudgetPortions()
+    {
+        $user_budget = BudgetController::getUserBudget();
+        $portions = BudgetPortions::with('category')
+            ->where('budget_id', $user_budget->budget_id)
+            ->get();
+
+        return $portions;
+    }
+
+    public static function getUserPortionCategories()
+    {
+
+        $budget = BudgetController::getUserBudget();
+        $budget_id = $budget->budget_id;
+
+        $portion_categories = BudgetPortions::with('category')
+            ->where('budget_id', $budget_id)
+            ->get();
+
+        return $portion_categories;
+    }
+
 
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        //
-    }
+
 
     /**
      * Show the form for creating a new resource.
@@ -141,7 +175,7 @@ class BudgetPortionsController extends Controller
     {
         $budgetPortions = new BudgetPortions();
         $budgetPortions->budget_id = $budget_id;
-        $budgetPortions->category = $request->input('category');
+        $budgetPortions->category_id = $request->input('category');
         $budgetPortions->portion = $request->input('portion');
         $budgetPortions->save();
 
