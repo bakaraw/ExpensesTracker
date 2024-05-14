@@ -188,9 +188,9 @@
                             @endif
                         </div>
                         <div>
-                            <button class="text-black font-extralight text-sm">
+                            <button class="text-gray-400 font-extralight text-sm">
                                 <i class="fa-solid fa-pen-to-square"></i>
-
+                                Edit
                             </button>
                         </div>
                     </div>
