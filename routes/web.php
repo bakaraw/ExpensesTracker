@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\BudgetPortionsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NewUserController;
@@ -29,11 +30,17 @@ Route::get('/welcome', [NewUserController::class, 'initializeUser'])->middleware
 Route::get('/new_user_setup', [NewUserController::class, 'index'])->middleware(['auth', 'verified'])->name('new_user.set-up');
 
 Route::post('/default_portion', [NewUserController::class, 'newUserSetup'])->middleware(['auth', 'verified'])->name('new_user.submit');
-Route::post('/edit_portion', [BudgetPortionsController::class, 'editPortion'])->middleware(['auth', 'verified', HandleSafeSubmit::class])->name('save.edited-portion');
-Route::post('/add_portion', [BudgetPortionsController::class, 'addPortion'])->middleware(['auth', 'verified', HandleSafeSubmit::class])->name('save.added-portion');
+Route::post('/edit_portion', [BudgetPortionsController::class, 'newUserEditPortion'])->middleware(['auth', 'verified', HandleSafeSubmit::class])->name('save.edited-portion');
+Route::post('/add_portion', [BudgetPortionsController::class, 'newUserAddPortion'])->middleware(['auth', 'verified', HandleSafeSubmit::class])->name('save.added-portion');
 Route::get('/new_portioning', [BudgetPortionsController::class, 'showPortion'])->middleware(['auth', 'verified'])->name('show.portion');
 
 Route::post('/add_money_in', [TransactionsController::class, 'storeMoneyIn'])->middleware(['auth', 'verified', HandleSafeSubmit::class])->name('add.money-in');
-Route::post('/add_money_out', [TransactionsController::class, 'storeMoneyOut'])->middleware(['auth', 'verified', HandleSafeSubmit::class])->name('add.money-out');
+Route::post('/add_money_out', [TransactionsController::class, 'goToDashboard'])->middleware(['auth', 'verified', HandleSafeSubmit::class])->name('add.money-out');
 Route::post('/add_savings', [TransactionsController::class, 'storeSavings'])->middleware(['auth', 'verified', HandleSafeSubmit::class])->name('add.savings');
+Route::post('/budgeting_add_expense', [TransactionsController::class, 'goToBudgeting'])->middleware(['auth', 'verified', HandleSafeSubmit::class])->name('budgeting.add-expense');
+
+Route::post('/edit_budget', [BudgetController::class, 'update'])->middleware(['auth', 'verified', HandleSafeSubmit::class])->name('edit.budget');
+Route::post('/budgeting_edit_portion', [BudgetPortionsController::class, 'budgetingEditPortion'])->middleware(['auth', 'verified', HandleSafeSubmit::class])->name('budgeting.edit-portion');
+Route::post('/budgeting_add_portion', [BudgetPortionsController::class, 'budgetingAddPortion'])->middleware(['auth', 'verified', HandleSafeSubmit::class])->name('budgeting.add-portion');
+
 require __DIR__ . '/auth.php';
