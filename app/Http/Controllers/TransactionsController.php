@@ -12,6 +12,19 @@ use Illuminate\Support\Facades\Log;
 
 class TransactionsController extends Controller
 {
+
+    public function goToBudgeting(Request $request,  SafeSubmit $safeSubmit)
+    {
+        $this->storeMoneyOut($request);
+        return $safeSubmit->intended(route('budgeting'));
+    }
+
+    public function goToDashboard(Request $request,  SafeSubmit $safeSubmit)
+    {
+        $this->storeMoneyOut($request);
+        return $safeSubmit->intended(route('dashboard'));
+    }
+
     public function storeMoneyIn(Request $request, SafeSubmit $safeSubmit)
     {
         $is_money_out = $request->input('is-money-out');
@@ -23,7 +36,7 @@ class TransactionsController extends Controller
         return $safeSubmit->intended(route('dashboard'));
     }
 
-    public function storeMoneyOut(Request $request, SafeSubmit $safeSubmit)
+    public function storeMoneyOut(Request $request)
     {
         $user_id = Auth()->user()->getAuthIdentifier();
         $is_money_out = $request->input('is-money-out');
@@ -32,7 +45,6 @@ class TransactionsController extends Controller
         $category = $request->input('category');
 
         $this->storeTransaction($user_id, $note, $amount, $category, $is_money_out);
-        return $safeSubmit->intended(route('dashboard'));
     }
 
     public function storeSavings(Request $request, SafeSubmit $safeSubmit)
@@ -59,6 +71,58 @@ class TransactionsController extends Controller
         $transactions->save();
     }
 
+    public function getCategoryTransactions()
+    {
+        $user_budget = BudgetController::getUserBudget();
+        $budget_portions = BudgetPortionsController::getBudgetPortions();
+        $daily_id = BudgetController::getTypeId('daily');
+        $weekly_id = BudgetController::getTypeId('weekly');
+        $monthly_id = BudgetController::getTypeId('monthly');
+
+        $transactionsArr = [];
+        foreach ($budget_portions as $budget_portion) {
+            switch ($user_budget->type) {
+                case $daily_id:
+                    $currentDate = Carbon::now();
+
+                    $transactions = Transactions::where('user_id', $this->userId())
+                        ->whereDate('created_at', $currentDate->toDateString())
+                        ->where('category_id', $budget_portion->category->id)
+                        ->orderBy('created_at', 'desc')
+                        ->get();
+
+                    $transactionsArr[$budget_portion->category->name] = $transactions;
+
+                    break;
+                case $weekly_id:
+                    $currentWeekStart = Carbon::now()->startOfWeek();
+                    $endDate = Carbon::now();
+
+                    $transactions = Transactions::where('user_id', $this->userId())
+                        ->whereBetween('created_at', [$currentWeekStart, $endDate])
+                        ->where('category_id', $budget_portion->category->id)
+                        ->orderBy('created_at', 'desc')
+                        ->get();
+
+                    $transactionsArr[$budget_portion->category->name] = $transactions;
+                    break;
+                case $monthly_id:
+                    $currentMonthStart = Carbon::now()->startOfMonth();
+                    $endDate = Carbon::now();
+                    $transactions = Transactions::where('user_id', $this->userId())
+                        ->whereBetween('created_at', [$currentMonthStart, $endDate])
+                        ->where('category_id', $budget_portion->category->id)
+                        ->orderBy('created_at', 'desc')
+                        ->get();
+
+                    $transactionsArr[$budget_portion->category->name] = $transactions;
+                    break;
+            }
+        }
+
+        return $transactionsArr;
+    }
+
     public function getTransactionsWithCategory($is_money_out)
     {
         $user_budget = BudgetController::getUserBudget();
@@ -77,16 +141,20 @@ class TransactionsController extends Controller
             switch ($user_budget->type) {
                 case $daily_id:
                     $currentDate = Carbon::now();
-                    $sum = $transactions->whereDate('created_at', $currentDate->toDateString())
+                    $sum = Transactions::with('category')
+                        ->where('user_id', $this->userId())
+                        ->whereDate('created_at', $currentDate->toDateString())
                         ->where('is_money_out', $is_money_out)
                         ->where('category_id', $budget_portion->category_id)
                         ->sum('amount');
+                    $totalTransactionArr[$budget_portion->category->name] = $sum;
                     break;
                 case $weekly_id:
                     $currentWeekStart = Carbon::now()->startOfWeek();
                     $endDate = Carbon::now();
                     $sum = Transactions::with('category')
                         ->where('user_id', $this->userId())
+                        ->where('is_money_out', $is_money_out)
                         ->whereBetween('created_at', [$currentWeekStart, $endDate])
                         ->where('category_id', $budget_portion->category->id)
                         ->sum('amount');
@@ -96,10 +164,14 @@ class TransactionsController extends Controller
                 case $monthly_id:
                     $currentMonthStart = Carbon::now()->startOfMonth();
                     $endDate = Carbon::now();
-                    $sum = $transactions->whereBetween('created_at', [$currentMonthStart, $endDate])
+                    $sum = Transactions::with('category')
+                        ->where('user_id', $this->userId())
                         ->where('is_money_out', $is_money_out)
+                        ->whereBetween('created_at', [$currentMonthStart, $endDate])
                         ->where('category_id', $budget_portion->category_id)
                         ->sum('amount');
+                    $totalTransactionArr[$budget_portion->category->name] = $sum;
+                    Log::debug("type: " . $user_budget->type);
                     break;
             }
         }
@@ -122,14 +194,16 @@ class TransactionsController extends Controller
         switch ($user_budget->type) {
             case $daily_id:
                 $currentDate = Carbon::now();
-                $sum = $transactions->whereDate('created_at', $currentDate->toDateString())
+
+                $sum = Transactions::where('user_id', $this->userId())->whereDate('created_at', $currentDate->toDateString())
                     ->where('is_money_out', $is_money_out)
                     ->sum('amount');
                 break;
             case $weekly_id:
                 $currentWeekStart = Carbon::now()->startOfWeek();
                 $endDate = Carbon::now();
-                $sum = $transactions->whereBetween('created_at', [$currentWeekStart, $endDate])
+                $sum =  Transactions::where('user_id', $this->userId())
+                    ->whereBetween('created_at', [$currentWeekStart, $endDate])
                     ->where('is_money_out', $is_money_out)
                     ->sum('amount');
 
@@ -138,7 +212,8 @@ class TransactionsController extends Controller
             case $monthly_id:
                 $currentMonthStart = Carbon::now()->startOfMonth();
                 $endDate = Carbon::now();
-                $sum = $transactions->whereBetween('created_at', [$currentMonthStart, $endDate])
+                $sum =  Transactions::where('user_id', $this->userId())
+                    ->whereBetween('created_at', [$currentMonthStart, $endDate])
                     ->where('is_money_out', $is_money_out)
                     ->sum('amount');
                 break;
@@ -161,23 +236,25 @@ class TransactionsController extends Controller
         switch ($user_budget->type) {
             case $daily_id:
                 $currentDate = Carbon::now();
-                $sum = $transactions->whereDate('created_at', $currentDate->toDateString())
-                    ->where('category_id', $savings_category)
+                $sum = Transactions::where('user_id', $this->userId())->whereDate('created_at', $currentDate->toDateString())
+                    ->where('is_money_out', 1)
                     ->sum('amount');
                 break;
             case $weekly_id:
                 $currentWeekStart = Carbon::now()->startOfWeek();
                 $endDate = Carbon::now();
-                $sum = $transactions->whereBetween('created_at', [$currentWeekStart, $endDate])
+                $sum =  Transactions::where('user_id', $this->userId())
+                    ->whereBetween('created_at', [$currentWeekStart, $endDate])
                     ->where('category_id', $savings_category)
                     ->sum('amount');
 
-                    Log::debug('savings sum: ' . $user_budget->type);
+                Log::debug('savings sum: ' . $user_budget->type);
                 break;
             case $monthly_id:
                 $currentMonthStart = Carbon::now()->startOfMonth();
                 $endDate = Carbon::now();
-                $sum = $transactions->whereBetween('created_at', [$currentMonthStart, $endDate])
+                $sum =  Transactions::where('user_id', $this->userId())
+                    ->whereBetween('created_at', [$currentMonthStart, $endDate])
                     ->where('category_id', $savings_category)
                     ->sum('amount');
                 break;
@@ -188,7 +265,6 @@ class TransactionsController extends Controller
 
     public function getTransactions()
     {
-
         $transactions = Transactions::where('user_id', $this->userId())->get();
         return $transactions;
     }
@@ -201,25 +277,31 @@ class TransactionsController extends Controller
         $monthly_id = BudgetController::getTypeId('monthly');
         $largestSpent = 0;
 
-        $largestSpentTransaction = Transactions::where('user_id', $this->userId())
-            ->where('is_money_out', 1)
-            ->orderBy('amount', 'desc');
         switch ($user_budget->type) {
             case $daily_id:
                 $currentDate = Carbon::now();
-                $largestSpent = $largestSpentTransaction->whereDate('created_at', $currentDate->toDateString())
+                $largestSpent = Transactions::where('user_id', $this->userId())
+                    ->where('is_money_out', 1)
+                    ->whereDate('created_at', $currentDate->toDateString())
+                    ->orderBy('amount', 'desc')
                     ->first();
                 break;
             case $weekly_id:
                 $currentWeekStart = Carbon::now()->startOfWeek();
                 $endDate = Carbon::now();
-                $largestSpent = $largestSpentTransaction->whereBetween('created_at', [$currentWeekStart, $endDate])
+                $largestSpent = Transactions::where('user_id', $this->userId())
+                    ->where('is_money_out', 1)
+                    ->whereBetween('created_at', [$currentWeekStart, $endDate])
+                    ->orderBy('amount', 'desc')
                     ->first();
                 break;
             case $monthly_id:
                 $currentMonthStart = Carbon::now()->startOfMonth();
                 $endDate = Carbon::now();
-                $largestSpent = $largestSpentTransaction->whereBetween('created_at', [$currentMonthStart, $endDate])
+                $largestSpent = Transactions::where('user_id', $this->userId())
+                    ->where('is_money_out', 1)
+                    ->whereBetween('created_at', [$currentMonthStart, $endDate])
+                    ->orderBy('amount', 'desc')
                     ->first();
                 break;
         }
