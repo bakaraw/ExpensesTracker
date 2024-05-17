@@ -31,6 +31,8 @@ class BudgetController extends Controller
         return $budget_type->id;
     }
 
+
+
     public static function getTypeName()
     {
         $type_id = BudgetController::getUserBudget()->type;

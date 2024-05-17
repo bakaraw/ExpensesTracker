@@ -22,16 +22,42 @@ class BudgetPortionsController extends Controller
             'alloc_budget' => BudgetController::getBudgetAlloc(),
             'user_budget' => BudgetController::getUserBudget(),
             'budget_portions' => BudgetPortionsController::getBudgetPortions(),
-            'trans_with_category' => $trans_controller->getTransactionsWithCategory($money_out),
+            'trans_with_categories' => $trans_controller->getTransactionsWithCategory($money_out),
             'total_expenses' => $trans_controller->getSum($money_out),
             'category_transactions' => $trans_controller->getCategoryTransactions(),
             'budget_types' => BudgetController::getAllType(),
             'categories' => $trans_controller->getAllCategories(),
+            'pie_datas' => BudgetPortionsController::getPieDatas(),
+            'pie_labels' => BudgetPortionsController::getPieLabels(),
         ]);
     }
 
+    public function getPieDatas()
+    {
+        $budget_portions = BudgetPortionsController::getBudgetPortions();
 
-    public function userId(){
+
+        $data = [];
+        foreach ($budget_portions as $budget_portion) {
+            array_push($data, $budget_portion->portion);
+        }
+
+        return json_encode($data, JSON_NUMERIC_CHECK);
+    }
+
+    public function getPieLabels()
+    {
+        $budget_portions = BudgetPortionsController::getBudgetPortions();
+        $labels = [];
+        foreach ($budget_portions as $budget_portion) {
+            array_push($labels, $budget_portion->category->name);
+        }
+
+        return json_encode($labels);
+    }
+
+    public function userId()
+    {
         return Auth()->user()->getAuthIdentifier();
     }
 
@@ -68,22 +94,26 @@ class BudgetPortionsController extends Controller
             $budget_portion->save();
         }
     }
-    public function newUserEditPortion(Request $request, SafeSubmit $safeSubmit){
+    public function newUserEditPortion(Request $request, SafeSubmit $safeSubmit)
+    {
         $this->editPortion($request, $safeSubmit);
         return $safeSubmit->intended(route('show.portion'));
     }
 
-    public function newUserAddPortion(Request $request, SafeSubmit $safeSubmit){
+    public function newUserAddPortion(Request $request, SafeSubmit $safeSubmit)
+    {
         $this->addPortion($request, $safeSubmit);
         return $safeSubmit->intended(route('show.portion'));
     }
 
-    public function budgetingEditPortion(Request $request, SafeSubmit $safeSubmit){
+    public function budgetingEditPortion(Request $request, SafeSubmit $safeSubmit)
+    {
         $this->editPortion($request, $safeSubmit);
         return $safeSubmit->intended(route('budgeting'));
     }
 
-    public function budgetingAddPortion(Request $request, SafeSubmit $safeSubmit){
+    public function budgetingAddPortion(Request $request, SafeSubmit $safeSubmit)
+    {
         $this->addPortion($request, $safeSubmit);
         return $safeSubmit->intended(route('budgeting'));
     }
@@ -103,8 +133,6 @@ class BudgetPortionsController extends Controller
             $this->deletePortion($portion_id);
         }
         $this->updateAllocatedBudget($budget->budget_id);
-
-
     }
 
     public function addPortion(Request $request, SafeSubmit $safeSubmit)

@@ -16,7 +16,7 @@ Route::get('/', function () {
 
 Route::get('/dashboard',  [DashboardController::class, 'index'])->middleware(['auth', 'verified', NewUser::class])->name('dashboard');
 Route::get('/budgeting',  [BudgetPortionsController::class, 'index'])->middleware(['auth', 'verified', NewUser::class])->name('budgeting');
-Route::get('/transactions',  [BudgetPortionsController::class, 'index'])->middleware(['auth', 'verified', NewUser::class])->name('transaction');
+Route::get('/transactions',  [BudgetPortionsController::class, 'index'])->middleware(['auth', 'verified', NewUser::class])->name('transactions');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
