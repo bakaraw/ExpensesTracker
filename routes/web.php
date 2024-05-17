@@ -16,7 +16,7 @@ Route::get('/', function () {
 
 Route::get('/dashboard',  [DashboardController::class, 'index'])->middleware(['auth', 'verified', NewUser::class])->name('dashboard');
 Route::get('/budgeting',  [BudgetPortionsController::class, 'index'])->middleware(['auth', 'verified', NewUser::class])->name('budgeting');
-Route::get('/transactions',  [BudgetPortionsController::class, 'index'])->middleware(['auth', 'verified', NewUser::class])->name('transactions');
+Route::get('/transactions',  [TransactionsController::class, 'index'])->middleware(['auth', 'verified', NewUser::class])->name('transactions');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -43,4 +43,6 @@ Route::post('/edit_budget', [BudgetController::class, 'update'])->middleware(['a
 Route::post('/budgeting_edit_portion', [BudgetPortionsController::class, 'budgetingEditPortion'])->middleware(['auth', 'verified', HandleSafeSubmit::class])->name('budgeting.edit-portion');
 Route::post('/budgeting_add_portion', [BudgetPortionsController::class, 'budgetingAddPortion'])->middleware(['auth', 'verified', HandleSafeSubmit::class])->name('budgeting.add-portion');
 
+
+Route::get('/search',  [TransactionsController::class, 'search'])->middleware(['auth', 'verified', NewUser::class])->name('search.transaction');
 require __DIR__ . '/auth.php';

@@ -13,6 +13,51 @@ use Illuminate\Support\Facades\Log;
 class TransactionsController extends Controller
 {
 
+    public function index()
+    {
+        $trans_controller = new TransactionsController();
+
+        $money_in = 0;
+        $money_out = 1;
+
+        $money_in_sum = $trans_controller->getSum($money_in);
+        $money_out_sum = $trans_controller->getSum($money_out);
+
+        $search = session('search');
+        $searched_trans = session('searched_trans');
+
+        return view('transactions', [
+            'user_budget' => BudgetController::getUserBudget(),
+            'sum_money_in' => $money_in_sum,
+            'sum_money_out' => $money_out_sum,
+            'trans_based_of_type' => $trans_controller->getTransactionsBasedOfBudgetType(),
+            'search' => $search,
+            'searched_trans' => $searched_trans,
+        ]);
+    }
+
+    public function search(Request $request, SafeSubmit $safeSubmit)
+    {
+        $search = $request->input('search');
+
+        $transactions = Transactions::where('user_id', $this->userId())
+            ->where(function ($query) use ($search) {
+                $query->where('note', 'like', "%$search%")
+                    ->orWhere('created_at', 'like', "%$search%")
+                    ->orWhereHas('category', function ($query) use ($search) {
+                        $query->where('name', 'like', "%$search%");
+                    });
+            })
+            ->get();
+
+        Log::debug('searched: ' . $transactions);
+
+        return $safeSubmit->intended(route('transactions'))->with([
+            'search' => $search,
+            'searched_trans' => $transactions,
+        ]);
+    }
+
     public function goToBudgeting(Request $request,  SafeSubmit $safeSubmit)
     {
         $this->storeMoneyOut($request);
@@ -73,55 +118,50 @@ class TransactionsController extends Controller
 
     public function getCategoryTransactions()
     {
-        $user_budget = BudgetController::getUserBudget();
-        $budget_portions = BudgetPortionsController::getBudgetPortions();
-        $daily_id = BudgetController::getTypeId('daily');
-        $weekly_id = BudgetController::getTypeId('weekly');
-        $monthly_id = BudgetController::getTypeId('monthly');
+        $userBudget = BudgetController::getUserBudget();
+        $budgetPortions = BudgetPortionsController::getBudgetPortions();
+        $budgetTypeIds = [
+            'daily' => BudgetController::getTypeId('daily'),
+            'weekly' => BudgetController::getTypeId('weekly'),
+            'monthly' => BudgetController::getTypeId('monthly'),
+        ];
+
+        $dateRanges = [
+            $budgetTypeIds['daily'] => [
+                Carbon::now()->toDateString(),
+                Carbon::now()->toDateString(),
+            ],
+            $budgetTypeIds['weekly'] => [
+                Carbon::now()->startOfWeek(),
+                Carbon::now(),
+            ],
+            $budgetTypeIds['monthly'] => [
+                Carbon::now()->startOfMonth(),
+                Carbon::now(),
+            ],
+        ];
 
         $transactionsArr = [];
-        foreach ($budget_portions as $budget_portion) {
-            switch ($user_budget->type) {
-                case $daily_id:
-                    $currentDate = Carbon::now();
+        foreach ($budgetPortions as $budgetPortion) {
+            $categoryId = $budgetPortion->category->id;
+            $categoryName = $budgetPortion->category->name;
 
-                    $transactions = Transactions::where('user_id', $this->userId())
-                        ->whereDate('created_at', $currentDate->toDateString())
-                        ->where('category_id', $budget_portion->category->id)
-                        ->orderBy('created_at', 'desc')
-                        ->get();
+            if (isset($dateRanges[$userBudget->type])) {
+                [$startDate, $endDate] = $dateRanges[$userBudget->type];
 
-                    $transactionsArr[$budget_portion->category->name] = $transactions;
+                $transactions = Transactions::where('user_id', $this->userId())
+                    ->where('category_id', $categoryId)
+                    ->whereBetween('created_at', [$startDate, $endDate])
+                    ->orderBy('created_at', 'desc')
+                    ->get();
 
-                    break;
-                case $weekly_id:
-                    $currentWeekStart = Carbon::now()->startOfWeek();
-                    $endDate = Carbon::now();
-
-                    $transactions = Transactions::where('user_id', $this->userId())
-                        ->whereBetween('created_at', [$currentWeekStart, $endDate])
-                        ->where('category_id', $budget_portion->category->id)
-                        ->orderBy('created_at', 'desc')
-                        ->get();
-
-                    $transactionsArr[$budget_portion->category->name] = $transactions;
-                    break;
-                case $monthly_id:
-                    $currentMonthStart = Carbon::now()->startOfMonth();
-                    $endDate = Carbon::now();
-                    $transactions = Transactions::where('user_id', $this->userId())
-                        ->whereBetween('created_at', [$currentMonthStart, $endDate])
-                        ->where('category_id', $budget_portion->category->id)
-                        ->orderBy('created_at', 'desc')
-                        ->get();
-
-                    $transactionsArr[$budget_portion->category->name] = $transactions;
-                    break;
+                $transactionsArr[$categoryName] = $transactions;
             }
         }
 
         return $transactionsArr;
     }
+
 
     public function getTransactionsWithCategory($is_money_out)
     {
@@ -266,6 +306,46 @@ class TransactionsController extends Controller
     public function getTransactions()
     {
         $transactions = Transactions::where('user_id', $this->userId())->get();
+        return $transactions;
+    }
+
+    public function getTransactionsBasedOfBudgetType()
+    {
+        $daily_id = BudgetController::getTypeId('daily');
+        $weekly_id = BudgetController::getTypeId('weekly');
+        $monthly_id = BudgetController::getTypeId('monthly');
+        $user_budget = BudgetController::getUserBudget();
+
+        $transactions = '';
+        switch ($user_budget->type) {
+            case $daily_id:
+                $currentDate = Carbon::now();
+                $transactions = Transactions::with('category')
+                    ->where('user_id', $this->userId())
+                    ->whereDate('created_at', $currentDate->toDateString())
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+                break;
+            case $weekly_id:
+                $currentWeekStart = Carbon::now()->startOfWeek();
+                $endDate = Carbon::now();
+                $transactions =  Transactions::with('category')
+                    ->where('user_id', $this->userId())
+                    ->whereBetween('created_at', [$currentWeekStart, $endDate])
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+
+                break;
+            case $monthly_id:
+                $currentMonthStart = Carbon::now()->startOfMonth();
+                $endDate = Carbon::now();
+                $transactions =  Transactions::with('category')
+                    ->where('user_id', $this->userId())
+                    ->whereBetween('created_at', [$currentMonthStart, $endDate])
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+                break;
+        }
         return $transactions;
     }
 

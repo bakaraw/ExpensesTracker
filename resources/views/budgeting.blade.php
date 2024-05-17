@@ -92,7 +92,7 @@
 
                         </div>
                     </div>
-                    <div class="mt-4 w-full bg-white rounded-lg px-3 py-2 flex-grow shadow-md">
+                    <div class="mt-4 w-full bg-white rounded-lg px-5 py-2 flex-grow shadow-md">
                         <div class="flex justify-between items-center mt-3 mb-3">
                             <h1 class="text-2xl">Budget Portions</h1>
 
@@ -105,7 +105,7 @@
                                 @endphp
                                 <div
                                     class="border border-gray-300 rounded-xl mb-3 py-2 px-4 flex justify-start items-center snap-y gap-4">
-                                    <div class="bg-yellow-400 rounded-full w-12 h-10 flex items-center justify-center">
+                                    <div class="bg-yellow-400 rounded-full w-14 h-10 flex items-center justify-center">
                                         <i class="fa-solid {{ $budget_portion->category->icon }}"></i>
                                     </div>
                                     <div class="flex flex-row justify-between w-full">
@@ -160,19 +160,19 @@
                 <div class="w-2/5 bg-gray-100 flex-shrink-0 flex flex-col">
                     <div class="w-full h-full flex flex-col justify-between">
                         <div class="bg-white h-2/3 flex flex-col justify-start rounded-lg mb-4 shadow-md">
-                            <div class="bg-gradient-to-b from-amber-500 to-orange-600 rounded-t-lg px-2 pt-2 mb-3">
+                            <div class=" bg-amber-500 rounded-t-lg px-2 pt-2 mb-3">
                                 <h1 class="text-2xl mb-2 text-white">
                                     Portion Pie
                                 </h1>
                             </div>
-                            <div class="flex-1 overflow-hidden flex justify-center items-center mb-3">
+                            <div class="flex-1 overflow-hidden flex justify-center items-center m-8">
                                 <canvas id="portion-pie" class="w-full h-full max-w-full max-h-full"></canvas>
                             </div>
                         </div>
 
 
                         <div class="bg-white h-1/3 rounded-lg shadow-md">
-                            <div class="bg-gradient-to-b from-slate-500 to-gray-700 rounded-t-lg px-2 py-1">
+                            <div class=" bg-gray-700 rounded-t-lg px-2 py-1">
                                 <h1 class="text-lg text-white">
                                     Status
                                 </h1>
