@@ -159,19 +159,19 @@
                 </div>
                 <div class="w-2/5 bg-gray-100 flex-shrink-0 flex flex-col">
                     <div class="w-full h-full flex flex-col justify-between">
-                        <div class="bg-white h-2/3 flex flex-col justify-start rounded-lg mb-4 shadow-md">
+                        <div class="bg-white h-1/2 flex flex-col justify-start rounded-lg mb-4 shadow-md">
                             <div class=" bg-amber-500 rounded-t-lg px-2 pt-2 mb-3">
                                 <h1 class="text-2xl mb-2 text-white">
                                     Portion Pie
                                 </h1>
                             </div>
-                            <div class="flex-1 overflow-hidden flex justify-center items-center m-8">
+                            <div class="flex-1 overflow-hidden flex justify-center items-center m-3">
                                 <canvas id="portion-pie" class="w-full h-full max-w-full max-h-full"></canvas>
                             </div>
                         </div>
 
 
-                        <div class="bg-white h-1/3 rounded-lg shadow-md">
+                        <div class="bg-white h-1/2 rounded-lg shadow-md">
                             <div class=" bg-gray-700 rounded-t-lg px-2 py-1">
                                 <h1 class="text-lg text-white">
                                     Status

@@ -187,10 +187,9 @@
                             @endif
                         </div>
                         <div>
-                            <button class="text-gray-400 font-extralight text-sm">
-                                <i class="fa-solid fa-pen-to-square"></i>
-                                Edit
-                            </button>
+                            <x-nav-link :href="route('budgeting')" :active="request()->routeIs('budgeting')">
+                                {{ __('Edit') }}
+                            </x-nav-link>
                         </div>
                     </div>
 

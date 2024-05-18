@@ -34,7 +34,7 @@ Route::post('/edit_portion', [BudgetPortionsController::class, 'newUserEditPorti
 Route::post('/add_portion', [BudgetPortionsController::class, 'newUserAddPortion'])->middleware(['auth', 'verified', HandleSafeSubmit::class])->name('save.added-portion');
 Route::get('/new_portioning', [BudgetPortionsController::class, 'showPortion'])->middleware(['auth', 'verified'])->name('show.portion');
 
-Route::post('/add_money_in', [TransactionsController::class, 'storeMoneyIn'])->middleware(['auth', 'verified', HandleSafeSubmit::class])->name('add.money-in');
+Route::post('/add_money_in', [TransactionsController::class, 'goToDashboardMoneyIn'])->middleware(['auth', 'verified', HandleSafeSubmit::class])->name('add.money-in');
 Route::post('/add_money_out', [TransactionsController::class, 'goToDashboard'])->middleware(['auth', 'verified', HandleSafeSubmit::class])->name('add.money-out');
 Route::post('/add_savings', [TransactionsController::class, 'storeSavings'])->middleware(['auth', 'verified', HandleSafeSubmit::class])->name('add.savings');
 Route::post('/budgeting_add_expense', [TransactionsController::class, 'goToBudgeting'])->middleware(['auth', 'verified', HandleSafeSubmit::class])->name('budgeting.add-expense');
@@ -45,4 +45,7 @@ Route::post('/budgeting_add_portion', [BudgetPortionsController::class, 'budgeti
 
 
 Route::get('/search',  [TransactionsController::class, 'search'])->middleware(['auth', 'verified', NewUser::class])->name('search.transaction');
+Route::get('/filter_transctions_by_date',  [TransactionsController::class, 'filterByDate'])->middleware(['auth', 'verified', NewUser::class])->name('filter.bydate');
+Route::post('/transactions_add_money_in', [TransactionsController::class, 'goToTransactionsMoneyIn'])->middleware(['auth', 'verified', HandleSafeSubmit::class])->name('transactions.money-in');
+Route::post('/transactions_add_money_out', [TransactionsController::class, 'goToTransactionsMoneyOut'])->middleware(['auth', 'verified', HandleSafeSubmit::class])->name('transactions.money-out');
 require __DIR__ . '/auth.php';
