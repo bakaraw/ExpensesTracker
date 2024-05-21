@@ -83,5 +83,9 @@ class ExpenseCategorySeeder extends Seeder
             'icon' => 'fas fa-money-check'
         ]);
 
+        DB::table('expense_categories')->insert([
+            'name' => 'Uncategorized',
+            'icon' => 'fas fa-question'
+        ]);
     }
 }

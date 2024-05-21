@@ -1,5 +1,5 @@
 <x-newuser-layout>
-    <div class="bg-gray-500 bg-opacity-15 p-5 rounded-lg grid grid-cols-3">
+    <div class="bg-gray-500 bg-opacity-15 p-5 shadow-md rounded-lg grid grid-cols-3">
         <h1 class="text-4xl font-black uppercase col-span-3">Portion Budget</h1>
 
         <h1 class="text-xl mb-3">Php {{ $budget }}</h1>
@@ -16,7 +16,7 @@
             @endphp
             <button x-data
                 x-on:click="$dispatch('open-modal' , {name : 'portion-modal-{{ $budget_portion->portion_id }}'})"
-                class="bg-gray-800 drop-shadow-md mb-3 px-7 py-2 rounded-full flex justify-between items-center col-span-3 hover:bg-gray-600 cursor-pointer">
+                class="bg-white drop-shadow-md mb-3 px-7 py-2 rounded-full flex justify-between items-center col-span-3 hover:bg-lime-200 active:bg-lime-400 cursor-pointer">
                 @if ($matching_category)
                     <i class="fa-solid {{ $matching_category->icon }}"></i>
                     <p>{{ $matching_category->name }}</p>
@@ -117,13 +117,13 @@
         <div class="col-span-3">
             <div class="mb-6 flex">
                 <button x-data x-on:click="$dispatch('open-modal' , {name : 'add-portion'})"
-                    class="w-full bg-gray-100 px-6 py-2 rounded-full text-gray-800 hover:bg-gray-400 hover:text-gray-100">
+                    class="w-full bg-gray-600 px-6 py-2 rounded-full hover:bg-gray-700 hover:text-gray-100 shadow-md text-white">
                     <i class="fa-solid fas fa-plus"></i>
                 </button>
             </div>
             <div class="flex">
                 <a href="{{ route('dashboard') }}"
-                    class="w-full bg-yellow-500 px-6 py-2 rounded-full text-white text-center">Start Tracking</a>
+                    class="w-full bg-yellow-500 hover:bg-yellow-600 active:bg-yellow-700 shadow-md px-6 py-2 rounded-full text-white text-center">Start Tracking</a>
             </div>
         </div>
     </div>
