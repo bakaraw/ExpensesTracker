@@ -28,26 +28,44 @@ class DatabaseSeeder extends Seeder
             ExpenseCategorySeeder::class
         ]);
 
-        for($i = 0; $i < 53; $i++){
+
+        $money_in = 0;
+        $money_out =1;
+        $savings_category_id = 6;
+
+        for ($i = 0; $i < 53; $i++) {
+
+            //inserting money-in
             DB::table('transactions')->insert([
                 'user_id' => 1,
                 'note' => "none",
                 'amount' => rand(300, 900),
-                'is_money_out' => 0,
+                'is_money_out' => $money_in,
                 'created_at' => Carbon::now()->subWeeks($i),
                 'updated_at' => Carbon::now()->subWeeks($i),
-               ]);
+            ]);
 
-               DB::table('transactions')->insert([
+            //inserting money-out
+            DB::table('transactions')->insert([
                 'user_id' => 1,
                 'note' => "none",
                 'amount' => rand(300, 900),
-                'category_id' => rand(1, 6),
-                'is_money_out' => 1,
+                'category_id' => rand(1, 5),
+                'is_money_out' => $money_out,
                 'created_at' => Carbon::now()->subWeeks($i),
                 'updated_at' => Carbon::now()->subWeeks($i),
-               ]);
-        }
+            ]);
 
+            // inserting savings
+            DB::table('transactions')->insert([
+                'user_id' => 1,
+                'note' => "none",
+                'amount' => rand(50, 100),
+                'category_id' => $savings_category_id,
+                'is_money_out' => $money_out,
+                'created_at' => Carbon::now()->subWeeks($i),
+                'updated_at' => Carbon::now()->subWeeks($i),
+            ]);
+        }
     }
 }

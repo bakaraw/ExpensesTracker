@@ -33,15 +33,12 @@
     </x-slot>
     <div class="py-7">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="flex gap-x-4">
-                <div class="w-3/5 bg-gray-100 flex-shrink-0 flex flex-col">
-                    <div class="flex gap-x-4">
-                        <div
-                            class="w-1/2 bg-gradient-to-b from-slate-500 to-gray-700 rounded-lg p-4 shadow-md text-white flex justify-between">
+            <div class="flex flex-col lg:flex-row gap-4">
+                <div class="lg:w-3/5 bg-gray-100 flex-shrink-0 flex flex-col">
+                    <div class="flex flex-col md:flex-row gap-4">
+                        <div class="w-full md:w-1/2 bg-gradient-to-b from-slate-500 to-gray-700 rounded-lg p-4 shadow-md text-white flex justify-between">
                             <div>
-                                <p class="font-thin">
-                                    Total Budget
-                                </p>
+                                <p class="font-thin">Total Budget</p>
                                 <h1 class="font-bold text-ultrablack text-2xl">
                                     PHP
                                     @if ($alloc_budget > 0)
@@ -52,24 +49,17 @@
                                 </h1>
                             </div>
                             <div>
-                                <button x-data x-on:click="$dispatch('open-modal' , {name : 'edit-budget'})"
-                                    class="text-gray-300">
-                                    <svg class="feather feather-edit" fill="none" height="24"
-                                        stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                        stroke-width="2" viewBox="0 0 24 24" width="20"
-                                        xmlns="http://www.w3.org/2000/svg">
+                                <button x-data x-on:click="$dispatch('open-modal' , {name : 'edit-budget'})" class="text-gray-300">
+                                    <svg class="feather feather-edit" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
                                         <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
                                     </svg>
                                 </button>
                             </div>
                         </div>
-                        <div
-                            class="w-1/2 bg-gradient-to-b from-amber-500 to-orange-600 rounded-lg p-4 shadow-md text-white flex justify-between items-center">
+                        <div class="w-full md:w-1/2 bg-gradient-to-b from-amber-500 to-orange-600 rounded-lg p-4 shadow-md text-white flex justify-between items-center">
                             <div>
-                                <p class="font-thin">
-                                    Total Expenses
-                                </p>
+                                <p class="font-thin">Total Expenses</p>
                                 <h1 class="font-bold text-ultrablack text-2xl">
                                     PHP
                                     @if ($total_expenses > 0)
@@ -80,65 +70,45 @@
                                 </h1>
                             </div>
                             <div>
-                                <button x-data x-on:click="$dispatch('open-modal' , {name : 'money-out-modal'})"
-                                    class="flex items-center justify-center w-10 h-10 rounded-full bg-white text-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-600 shadow-md hover:bg-transparent hover:border-2 hover:border-white hover:text-white hover:transition">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="w-6 h-6"
-                                        fill="currentColor">
-                                        <path
-                                            d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
+                                <button x-data x-on:click="$dispatch('open-modal' , {name : 'money-out-modal'})" class="flex items-center justify-center w-10 h-10 rounded-full bg-white text-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-600 shadow-md hover:bg-transparent hover:border-2 hover:border-white hover:text-white hover:transition">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="w-6 h-6" fill="currentColor">
+                                        <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
                                     </svg>
                                 </button>
                             </div>
-
                         </div>
                     </div>
                     <div class="mt-4 w-full bg-white rounded-lg px-5 py-2 flex-grow shadow-md">
                         <div class="flex justify-between items-center mt-3 mb-3">
                             <h1 class="text-2xl">Budget Portions</h1>
-
                         </div>
-                        <div class="scroll-smooth max-h-96 snap-y overflow-y-auto ">
+                        <div class="scroll-smooth max-h-96 snap-y overflow-y-auto">
                             @foreach ($budget_portions as $budget_portion)
                                 @php
-                                    // Find the corresponding category from $categories based on category ID
                                     array_push($portion_categories, $budget_portion->category_id);
                                 @endphp
-                                <div
-                                    class="border border-gray-300 rounded-xl mb-3 py-2 px-4 flex justify-start items-center snap-y gap-4">
+                                <div class="border border-gray-300 rounded-xl mb-3 py-2 px-4 flex justify-start items-center snap-y gap-4">
                                     <div class="bg-yellow-400 rounded-full w-14 h-10 flex items-center justify-center">
                                         <i class="fa-solid {{ $budget_portion->category->icon }}"></i>
                                     </div>
                                     <div class="flex flex-row justify-between w-full">
                                         <div class="flex-1 items-center justify-between">
-                                            <p class="font-bold text-lg">{{ $budget_portion->category->name }}</p>
-                                            <p class="text-sm text-gray-700">Remaining: PHP
-                                                {{ $budget_portion->portion - $trans_with_categories[$budget_portion->category->name] }}
-                                            </p>
+                                            <p class="font-bold">{{ $budget_portion->category->name }}</p>
+                                            <p class="text-sm text-gray-700">Remaining: PHP {{ $budget_portion->portion - $trans_with_categories[$budget_portion->category->name] }}</p>
                                         </div>
                                         <div class="flex-1 flex flex-col items-end">
-                                            <p class="font-bold text-lg">PHP {{ $budget_portion->portion }}</p>
-                                            <p class="text-sm text-gray-700">Expenses:
-                                                {{ $trans_with_categories[$budget_portion->category->name] }}</p>
+                                            <p class="font-bold">PHP {{ $budget_portion->portion }}</p>
+                                            <p class="text-sm text-gray-700">Expenses: {{ $trans_with_categories[$budget_portion->category->name] }}</p>
                                         </div>
-
                                     </div>
                                     <div class="flex space-x-2">
-                                        <button x-data
-                                            x-on:click="$dispatch('open-modal' , {name : 'portion-{{ $budget_portion->portion_id }}'})"
-                                            class="bg-orange-400 hover:bg-orange-500 active:bg-orange-600 text-white rounded-lg p-2">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"
-                                                class="w-6 h-6" fill="currentColor">
-                                                <path
-                                                    d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
+                                        <button x-data x-on:click="$dispatch('open-modal' , {name : 'portion-{{ $budget_portion->portion_id }}'})" class="bg-orange-400 hover:bg-orange-500 active:bg-orange-600 text-white rounded-lg p-2">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="w-6 h-6" fill="currentColor">
+                                                <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
                                             </svg>
                                         </button>
-                                        <button x-data
-                                            x-on:click="$dispatch('open-modal' , {name : 'edit-portion-{{ $budget_portion->portion_id }}'})"
-                                            class="bg-gray-600 hover:bg-gray-700 active:bg-gray-600 text-white rounded-lg p-2">
-                                            <svg class="feather feather-edit" fill="none" height="24"
-                                                stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                                stroke-width="2" viewBox="0 0 24 24" width="20"
-                                                xmlns="http://www.w3.org/2000/svg">
+                                        <button x-data x-on:click="$dispatch('open-modal' , {name : 'edit-portion-{{ $budget_portion->portion_id }}'})" class="bg-gray-600 hover:bg-gray-700 active:bg-gray-600 text-white rounded-lg p-2">
+                                            <svg class="feather feather-edit" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
                                                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
                                             </svg>
@@ -148,34 +118,25 @@
                             @endforeach
                         </div>
                         <div class="flex justify-center w-full mb-3">
-                            <button x-data x-on:click="$dispatch('open-modal' , {name : 'add-portion'})"
-                                class="bg-gray-800 px-3 py-2 rounded-full text-white mt-3 mr-2 hover:bg-gray-700 active:bg-gray-900 flex justify-center items-center w-64 ">
-                                <p>
-                                    Add Portion
-                                </p>
+                            <button x-data x-on:click="$dispatch('open-modal' , {name : 'add-portion'})" class="bg-gray-800 px-3 py-2 rounded-full text-white mt-3 mr-2 hover:bg-gray-700 active:bg-gray-900 flex justify-center items-center w-64">
+                                <p>Add Portion</p>
                             </button>
                         </div>
                     </div>
                 </div>
-                <div class="w-2/5 bg-gray-100 flex-shrink-0 flex flex-col">
+                <div class="lg:w-2/5 bg-gray-100 flex-shrink-0 flex flex-col mt-4 lg:mt-0">
                     <div class="w-full h-full flex flex-col justify-between">
                         <div class="bg-white h-1/2 flex flex-col justify-start rounded-lg mb-4 shadow-md">
-                            <div class=" bg-amber-500 rounded-t-lg px-2 pt-2 mb-3">
-                                <h1 class="text-2xl mb-2 text-white">
-                                    Portion Pie
-                                </h1>
+                            <div class="bg-amber-500 rounded-t-lg px-2 pt-2 mb-3">
+                                <h1 class="text-2xl mb-2 text-white">Portion Pie</h1>
                             </div>
                             <div class="flex-1 overflow-hidden flex justify-center items-center m-3">
                                 <canvas id="portion-pie" class="w-full h-full max-w-full max-h-full"></canvas>
                             </div>
                         </div>
-
-
                         <div class="bg-white h-1/2 rounded-lg shadow-md">
-                            <div class=" bg-gray-700 rounded-t-lg px-2 py-1">
-                                <h1 class="text-lg text-white">
-                                    Status
-                                </h1>
+                            <div class="bg-gray-700 rounded-t-lg px-2 py-1">
+                                <h1 class="text-lg text-white">Status</h1>
                             </div>
                             <div class="flex justify-center items-center">
                                 <div class="px-3">
@@ -189,16 +150,13 @@
                                             }
                                         }
                                     @endphp
-                                    <p class="text-lg my-7 mx-2">
-                                        You have been spending a lot on <strong>{{ $largest_portion_expense_category }}</strong> with a
-                                        total expense of <strong>Php {{ number_format($largest_portion_expense_sum) }}</strong>.
+                                    <p class="my-7 mx-2">
+                                        You have been spending a lot on <strong>{{ $largest_portion_expense_category }}</strong> with a total expense of <strong>Php {{ number_format($largest_portion_expense_sum) }}</strong>.
                                     </p>
                                 </div>
                             </div>
-
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>

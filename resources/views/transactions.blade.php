@@ -35,8 +35,8 @@
     <div class="py-7">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="">
-                <div class="flex justify-between gap-x-4">
-                    <div class="w-2/5">
+                <div class="flex flex-col lg:flex-row justify-between gap-4">
+                    <div class="w-full lg:w-2/5">
                         <div class="bg-white rounded-lg shadow-md p-4 mb-4">
                             <h1 class="">
                                 Balance
@@ -64,12 +64,11 @@
                             </div>
                         </div>
                         <div class="bg-white rounded-lg shadow-md p-4">
-                            <div class="flex justify-between items-end">
+                            <div class="flex justify-between items-end mb-3">
                                 <h1 class="font-semibold text-lg">
                                     Insights Summary
                                 </h1>
-                                <select id="chartSelector"
-                                    class="w-36 text-black border border-gray-300 rounded-md py-1 px-4 cursor-pointer">
+                                <select id="chartSelector" class="w-36 text-black border border-gray-300 rounded-md py-1 px-4 cursor-pointer">
                                     <option value="1">Daily</option>
                                     <option value="2">Weekly</option>
                                     <option value="3">Monthly</option>
@@ -87,75 +86,59 @@
                         </div>
                         <div class="mt-4">
                             <div class="flex justify-between gap-x-4 h-10 text-white">
-                                <button x-data x-on:click="$dispatch('open-modal' , {name : 'add-income'})"
-                                    class="w-1/2 bg-green-500 hover:bg-green-600 active:bg-green-700 rounded-lg transition shadow-md">
+                                <button x-data x-on:click="$dispatch('open-modal' , {name : 'add-income'})" class="w-1/2 bg-green-500 hover:bg-green-600 active:bg-green-700 rounded-lg transition shadow-md">
                                     Add Income
                                 </button>
-                                <button x-data x-on:click="$dispatch('open-modal' , {name : 'add-expense'})"
-                                    class="w-1/2 bg-red-500 hover:bg-red-600 active:bg-red-700 rounded-lg transition shadow-md">
+                                <button x-data x-on:click="$dispatch('open-modal' , {name : 'add-expense'})" class="w-1/2 bg-red-500 hover:bg-red-600 active:bg-red-700 rounded-lg transition shadow-md">
                                     Add Expenses
                                 </button>
                             </div>
                         </div>
                     </div>
-                    <div class="w-3/5 bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="w-full lg:w-3/5 bg-white rounded-lg shadow-md overflow-hidden">
                         <div>
-                            <div class="flex justify-between items-end bg-gray-600 p-3 rounded-t-lg text-white">
-                                <div class="w-5/12">
-                                    <form class="max-w-md mx-auto" action="{{ route('search.transaction') }}"
-                                        method="get">
-                                        <label for="default-search"
-                                            class="mb-2 text-sm font-medium text-gray-900 sr-only">Search</label>
+                            <div class="flex flex-col sm:flex-row justify-between items-end bg-gray-600 p-3 rounded-t-lg text-white">
+                                <div class="w-full sm:w-5/12 mb-2 sm:mb-0">
+                                    <form class="max-w-md mx-auto" action="{{ route('search.transaction') }}" method="get">
+                                        <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only">Search</label>
                                         <div class="relative">
-                                            <div
-                                                class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                                                <svg class="w-3 h-3 text-gray-500" aria-hidden="true"
-                                                    xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                    viewBox="0 0 20 20">
-                                                    <path stroke="currentColor" stroke-linecap="round"
-                                                        stroke-linejoin="round" stroke-width="2"
-                                                        d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                                            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                                <svg class="w-3 h-3 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
                                                 </svg>
                                             </div>
-                                            <input type="search" id="default-search" name="search"
-                                                value="{{ $search }}"
-                                                class="block w-full p-2 ps-8 text-sm text-gray-900 border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500"
-                                                placeholder="Search" required />
-                                            <button type="submit"
-                                                class="text-white absolute end-2 bottom-1 bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-2 py-1">
+                                            <input type="search" id="default-search" name="search" value="{{ $search }}" class="block w-full p-2 ps-8 text-sm text-gray-900 border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500" placeholder="Search" required />
+                                            <button type="submit" class="text-white absolute end-2 bottom-1 bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-2 py-1">
                                                 Search
                                             </button>
                                         </div>
                                     </form>
                                 </div>
-                                <div class="">
-                                    <form id="dateRangeForm" action="{{ route('filter.bydate') }}" method="get">
-                                        <input class="w-30 text-sm bg-gra text-black rounded-lg" type="date"
-                                            id="startDate" name="startDate" value="{{ $start_date }}">
-                                        to
-                                        <input class="w-30 text-sm text-black rounded-lg" type="date" id="endDate"
-                                            name="endDate" value="{{ $end_date }}" disabled>
+                                <div class="flex items-center">
+                                    <form id="dateRangeForm" action="{{ route('filter.bydate') }}" method="get" class="flex space-x-2">
+                                        <input class="w-20 text-sm bg-gra text-black rounded-lg border border-gray-300 p-1" type="date" id="startDate" name="startDate" value="{{ $start_date }}">
+                                        <span>to</span>
+                                        <input class="w-20 text-sm bg-gra text-black rounded-lg border border-gray-300 p-1" type="date" id="endDate" name="endDate" value="{{ $end_date }}">
                                     </form>
                                 </div>
                             </div>
-
                         </div>
-                        <div class="scroll-smooth max-h-[500px] snap-y overflow-y-auto overflow-x-hidden">
+                        <div class="scroll-smooth max-h-[500px] snap-y overflow-y-auto">
                             <table class="min-w-full divide-y divide-gray-200">
                                 <thead class="bg-gray-50">
                                     <tr>
-                                        <th scope="col"
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                                            Date & Time</th>
-                                        <th scope="col"
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                                            Note</th>
-                                        <th scope="col"
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                                            Category</th>
-                                        <th scope="col"
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                                            Amount</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                                            Date & Time
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                                            Note
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                                            Category
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                                            Amount
+                                        </th>
                                         <th scope="col" class="relative px-6 py-3">
                                             <span class="sr-only">Edit</span>
                                         </th>
@@ -171,7 +154,6 @@
                                             @endphp
                                             <tr class="text-gray-700">
                                                 <td class="px-6 py-4 whitespace-nowrap">
-                                                    {{-- h:i A --}}
                                                     <h1 class="font-semibold">
                                                         {{ $date->format('M d, Y') }}
                                                     </h1>
@@ -198,11 +180,9 @@
                                                 <td class="px-6 py-4 whitespace-nowrap">
                                                     @if ($transaction->is_money_out == 1)
                                                         @if ($transaction->category->name == 'Savings')
-                                                            <p class="text-yellow-600">+PHP {{ $transaction->amount }}
-                                                            </p>
+                                                            <p class="text-yellow-600">+PHP {{ $transaction->amount }}</p>
                                                         @else
-                                                            <p class="text-red-500">-PHP {{ $transaction->amount }}
-                                                            </p>
+                                                            <p class="text-red-500">-PHP {{ $transaction->amount }}</p>
                                                         @endif
                                                     @else
                                                         <p class="text-green-600">+PHP {{ $transaction->amount }}</p>
@@ -219,7 +199,6 @@
                                             @endphp
                                             <tr class="text-gray-700">
                                                 <td class="px-6 py-4 whitespace-nowrap">
-                                                    {{-- h:i A --}}
                                                     <h1 class="font-semibold">
                                                         {{ $date->format('M d, Y') }}
                                                     </h1>
@@ -246,11 +225,9 @@
                                                 <td class="px-6 py-4 whitespace-nowrap">
                                                     @if ($transaction->is_money_out == 1)
                                                         @if ($transaction->category->name == 'Savings')
-                                                            <p class="text-yellow-500">+PHP {{ $transaction->amount }}
-                                                            </p>
+                                                            <p class="text-yellow-500">+PHP {{ $transaction->amount }}</p>
                                                         @else
-                                                            <p class="text-red-500">-PHP {{ $transaction->amount }}
-                                                            </p>
+                                                            <p class="text-red-500">-PHP {{ $transaction->amount }}</p>
                                                         @endif
                                                     @else
                                                         <p class="text-green-600">+PHP {{ $transaction->amount }}</p>
@@ -267,7 +244,6 @@
                                             @endphp
                                             <tr class="text-gray-700">
                                                 <td class="px-6 py-4 whitespace-nowrap">
-                                                    {{-- h:i A --}}
                                                     <h1 class="font-semibold">
                                                         {{ $date->format('M d, Y') }}
                                                     </h1>
@@ -294,11 +270,9 @@
                                                 <td class="px-6 py-4 whitespace-nowrap">
                                                     @if ($transaction->is_money_out == 1)
                                                         @if ($transaction->category->name == 'Savings')
-                                                            <p class="text-yellow-500">+PHP {{ $transaction->amount }}
-                                                            </p>
+                                                            <p class="text-yellow-500">+PHP {{ $transaction->amount }}</p>
                                                         @else
-                                                            <p class="text-red-500">-PHP {{ $transaction->amount }}
-                                                            </p>
+                                                            <p class="text-red-500">-PHP {{ $transaction->amount }}</p>
                                                         @endif
                                                     @else
                                                         <p class="text-green-600">+PHP {{ $transaction->amount }}</p>
@@ -315,6 +289,7 @@
             </div>
         </div>
     </div>
+
     <x-my-modal name="add-income" width="max-w-lg" height="310">
         <x-slot name="header">
             <h1 class="text-black text-2xl">
@@ -449,7 +424,7 @@
                         label: 'Income',
                         data: <?php echo $money_in_data; ?>,
                         borderColor: 'rgb(132, 204, 22)',
-                        backgroundColor: 'rgba(132, 204, 22, 0.5)',
+                        backgroundColor: 'rgb(132, 204, 22)',
                         borderWidth: 3,
                         pointRadius: 0.3,
                         // fill: true
@@ -458,12 +433,20 @@
                         label: 'Expenses',
                         data: <?php echo $money_out_data; ?>,
                         borderColor: 'rgb(234, 88, 12)',
-                        backgroundColor: 'rgba(234, 88, 12, 0.5)',
+                        backgroundColor: 'rgb(234, 88, 12)',
                         borderWidth: 3,
                         pointRadius: 0.3,
                         // fill: true
                     },
-
+                    {
+                        label: 'Savings',
+                        data: <?php echo $d_savings; ?>,
+                        borderColor: 'rgb(250, 204, 21)',
+                        backgroundColor: 'rgba(250, 204, 21)',
+                        borderWidth: 3,
+                        pointRadius: 0.3,
+                        // fill: true
+                    },
 
                 ],
 
@@ -508,7 +491,7 @@
                         label: 'Income',
                         data: <?php echo $w_money_in_data; ?>,
                         borderColor: 'rgb(132, 204, 22)',
-                        backgroundColor: 'rgba(132, 204, 22, 0.5)',
+                        backgroundColor: 'rgb(132, 204, 22)',
                         borderWidth: 3,
                         pointRadius: 0.3,
                         // fill: true
@@ -517,7 +500,16 @@
                         label: 'Expenses',
                         data: <?php echo $w_money_out_data; ?>,
                         borderColor: 'rgb(234, 88, 12)',
-                        backgroundColor: 'rgba(234, 88, 12, 0.3)',
+                        backgroundColor: 'rgb(234, 88, 12)',
+                        borderWidth: 3,
+                        pointRadius: 0.3,
+                        // fill: true
+                    },
+                    {
+                        label: 'Savings',
+                        data: <?php echo $w_savings; ?>,
+                        borderColor: 'rgb(250, 204, 21)',
+                        backgroundColor: 'rgba(250, 204, 21)',
                         borderWidth: 3,
                         pointRadius: 0.3,
                         // fill: true
@@ -557,7 +549,7 @@
                         label: 'Income',
                         data: <?php echo $m_money_in_data; ?>,
                         borderColor: 'rgb(132, 204, 22)',
-                        backgroundColor: 'rgba(132, 204, 22, 0.5)',
+                        backgroundColor: 'rgb(132, 204, 22)',
                         borderWidth: 3,
                         pointRadius: 0.3,
                         // fill: true
@@ -566,12 +558,20 @@
                         label: 'Expenses',
                         data: <?php echo $m_money_out_data; ?>,
                         borderColor: 'rgb(234, 88, 12)',
-                        backgroundColor: 'rgba(234, 88, 12, 0.3)',
+                        backgroundColor: 'rgb(234, 88, 12)',
                         borderWidth: 3,
                         pointRadius: 0.3,
                         // fill: true
                     },
-
+                    {
+                        label: 'Savings',
+                        data: <?php echo $m_savings; ?>,
+                        borderColor: 'rgb(250, 204, 21)',
+                        backgroundColor: 'rgba(250, 204, 21)',
+                        borderWidth: 3,
+                        pointRadius: 0.3,
+                        // fill: true
+                    },
                 ],
 
             }

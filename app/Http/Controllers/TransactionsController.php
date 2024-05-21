@@ -48,6 +48,9 @@ class TransactionsController extends Controller
             'm_money_out_data' => $trans_controller->getMonthlyAmounts($money_out),
             'm_money_in_data' => $trans_controller->getMonthlyAmounts($money_in),
             'budget_portions' => BudgetPortionsController::getBudgetPortions(),
+            'd_savings' => $trans_controller->getDailySavings(),
+            'w_savings' => $trans_controller->getWeeklySavings(),
+            'm_savings' => $trans_controller->getMonthlySavings(),
         ];
 
         return view('transactions', $datas);
@@ -62,11 +65,11 @@ class TransactionsController extends Controller
             ->whereBetween('created_at', [$startDate, $endDate])
             ->get();
 
-            return $safeSubmit->intended(route('transactions'))->with([
-                'start_date' => $startDate,
-                'end_date' => $endDate,
-                'searched_trans_by_date' => $transactions
-            ]);
+        return $safeSubmit->intended(route('transactions'))->with([
+            'start_date' => $startDate,
+            'end_date' => $endDate,
+            'searched_trans_by_date' => $transactions
+        ]);
     }
 
     public function search(Request $request, SafeSubmit $safeSubmit)
@@ -104,17 +107,20 @@ class TransactionsController extends Controller
         return $safeSubmit->intended(route('dashboard'));
     }
 
-    public function goToDashboardMoneyIn(Request $request,  SafeSubmit $safeSubmit){
+    public function goToDashboardMoneyIn(Request $request,  SafeSubmit $safeSubmit)
+    {
         $this->storeMoneyIn($request);
         return $safeSubmit->intended(route('dashboard'));
     }
 
-    public function goToTransactionsMoneyIn(Request $request,  SafeSubmit $safeSubmit){
+    public function goToTransactionsMoneyIn(Request $request,  SafeSubmit $safeSubmit)
+    {
         $this->storeMoneyIn($request);
         return $safeSubmit->intended(route('transactions'));
     }
 
-    public function goToTransactionsMoneyOut(Request $request,  SafeSubmit $safeSubmit){
+    public function goToTransactionsMoneyOut(Request $request,  SafeSubmit $safeSubmit)
+    {
         $this->storeMoneyOut($request);
         return $safeSubmit->intended(route('transactions'));
     }
@@ -283,18 +289,18 @@ class TransactionsController extends Controller
             case $daily_id:
                 $currentDate = Carbon::now();
 
-                if($is_money_out == 1){
+                if ($is_money_out == 1) {
                     $sum = Transactions::with('category')
-                    ->where('user_id', $this->userId())->whereDate('created_at', $currentDate->toDateString())
-                    ->where('is_money_out', $is_money_out)
-                    ->whereHas('category', function($query) {
-                        $query->where('name', '!=', 'Savings');
-                    })
-                    ->sum('amount');
+                        ->where('user_id', $this->userId())->whereDate('created_at', $currentDate->toDateString())
+                        ->where('is_money_out', $is_money_out)
+                        ->whereHas('category', function ($query) {
+                            $query->where('name', '!=', 'Savings');
+                        })
+                        ->sum('amount');
                 } else {
                     $sum = Transactions::where('user_id', $this->userId())->whereDate('created_at', $currentDate->toDateString())
-                    ->where('is_money_out', $is_money_out)
-                    ->sum('amount');
+                        ->where('is_money_out', $is_money_out)
+                        ->sum('amount');
                 }
 
                 break;
@@ -303,18 +309,18 @@ class TransactionsController extends Controller
                 $endDate = Carbon::now();
                 if ($is_money_out == 1) {
                     $sum =  Transactions::with('category')
-                    ->where('user_id', $this->userId())
-                    ->whereBetween('created_at', [$currentWeekStart, $endDate])
-                    ->where('is_money_out', $is_money_out)
-                    ->whereHas('category', function($query) {
-                        $query->where('name', '!=', 'Savings');
-                    })
-                    ->sum('amount');
+                        ->where('user_id', $this->userId())
+                        ->whereBetween('created_at', [$currentWeekStart, $endDate])
+                        ->where('is_money_out', $is_money_out)
+                        ->whereHas('category', function ($query) {
+                            $query->where('name', '!=', 'Savings');
+                        })
+                        ->sum('amount');
                 } else {
                     $sum =  Transactions::where('user_id', $this->userId())
-                    ->whereBetween('created_at', [$currentWeekStart, $endDate])
-                    ->where('is_money_out', $is_money_out)
-                    ->sum('amount');
+                        ->whereBetween('created_at', [$currentWeekStart, $endDate])
+                        ->where('is_money_out', $is_money_out)
+                        ->sum('amount');
                 }
 
                 Log::debug('weekly sum: ' . $sum);
@@ -322,17 +328,17 @@ class TransactionsController extends Controller
             case $monthly_id:
                 $currentMonthStart = Carbon::now()->startOfMonth();
                 $endDate = Carbon::now();
-                if($is_money_out == 1){
+                if ($is_money_out == 1) {
                     $sum =  Transactions::with('category')
-                    ->where('user_id', $this->userId())
-                    ->whereBetween('created_at', [$currentMonthStart, $endDate])
-                    ->where('is_money_out', $is_money_out)
-                    ->sum('amount');
-                }else{
+                        ->where('user_id', $this->userId())
+                        ->whereBetween('created_at', [$currentMonthStart, $endDate])
+                        ->where('is_money_out', $is_money_out)
+                        ->sum('amount');
+                } else {
                     $sum =  Transactions::where('user_id', $this->userId())
-                    ->whereBetween('created_at', [$currentMonthStart, $endDate])
-                    ->where('is_money_out', $is_money_out)
-                    ->sum('amount');
+                        ->whereBetween('created_at', [$currentMonthStart, $endDate])
+                        ->where('is_money_out', $is_money_out)
+                        ->sum('amount');
                 }
 
                 break;
@@ -487,33 +493,33 @@ class TransactionsController extends Controller
 
         $startDate = Carbon::now()->subDays(30)->startOfDay();
 
-        if($is_money_out == 1){
+        if ($is_money_out == 1) {
             $results = Transactions::with('category')
-            ->select(
-            DB::raw('DATE(created_at) as date'),
-            DB::raw('SUM(amount) as total_amount')
-        )
-            ->where('user_id', $this->userId()) // Assuming $this->userId() retrieves the current user's ID
-            ->where('is_money_out', $is_money_out) // Assuming $is_money_out is a variable indicating whether it's a money out transaction
-            ->whereBetween('created_at', [$startDate, now()]) // Filter transactions within the last 30 days up to the present time
-            ->whereHas('category', function($query) {
-                $query->where('name', '!=', 'Savings');
-            })
-            ->groupBy(DB::raw('DATE(created_at)'))
-            ->orderBy(DB::raw('DATE(created_at)'))
-            ->get();
+                ->select(
+                    DB::raw('DATE(created_at) as date'),
+                    DB::raw('SUM(amount) as total_amount')
+                )
+                ->where('user_id', $this->userId()) // Assuming $this->userId() retrieves the current user's ID
+                ->where('is_money_out', $is_money_out) // Assuming $is_money_out is a variable indicating whether it's a money out transaction
+                ->whereBetween('created_at', [$startDate, now()]) // Filter transactions within the last 30 days up to the present time
+                ->whereHas('category', function ($query) {
+                    $query->where('name', '!=', 'Savings');
+                })
+                ->groupBy(DB::raw('DATE(created_at)'))
+                ->orderBy(DB::raw('DATE(created_at)'))
+                ->get();
         } else {
             $results = Transactions::with('category')
-            ->select(
-            DB::raw('DATE(created_at) as date'),
-            DB::raw('SUM(amount) as total_amount')
-        )
-            ->where('user_id', $this->userId()) // Assuming $this->userId() retrieves the current user's ID
-            ->where('is_money_out', $is_money_out) // Assuming $is_money_out is a variable indicating whether it's a money out transaction
-            ->whereBetween('created_at', [$startDate, now()]) // Filter transactions within the last 30 days up to the present time
-            ->groupBy(DB::raw('DATE(created_at)'))
-            ->orderBy(DB::raw('DATE(created_at)'))
-            ->get();
+                ->select(
+                    DB::raw('DATE(created_at) as date'),
+                    DB::raw('SUM(amount) as total_amount')
+                )
+                ->where('user_id', $this->userId()) // Assuming $this->userId() retrieves the current user's ID
+                ->where('is_money_out', $is_money_out) // Assuming $is_money_out is a variable indicating whether it's a money out transaction
+                ->whereBetween('created_at', [$startDate, now()]) // Filter transactions within the last 30 days up to the present time
+                ->groupBy(DB::raw('DATE(created_at)'))
+                ->orderBy(DB::raw('DATE(created_at)'))
+                ->get();
         }
 
 
@@ -543,25 +549,25 @@ class TransactionsController extends Controller
     {
         $startDate = now()->subMonths(3); // Get the date 3 months ago from today
         $endDate = now(); // Today's date
-        if($is_money_out == 1){
+        if ($is_money_out == 1) {
             $results = Transactions::select(DB::raw("CONCAT(YEAR(created_at), '-W', LPAD(WEEK(created_at), 2, '0')) as week_number"), DB::raw('SUM(amount) as total_amount'))
-            ->where('user_id', $this->userId()) // Assuming $this->userId() retrieves the current user's ID
-            ->where('is_money_out', $is_money_out)
-            ->whereBetween('created_at', [$startDate, $endDate])
-            ->whereHas('category', function($query) {
-                $query->where('name', '!=', 'Savings');
-            })
-            ->groupBy('week_number')
-            ->orderBy('week_number')
-            ->get();
+                ->where('user_id', $this->userId()) // Assuming $this->userId() retrieves the current user's ID
+                ->where('is_money_out', $is_money_out)
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->whereHas('category', function ($query) {
+                    $query->where('name', '!=', 'Savings');
+                })
+                ->groupBy('week_number')
+                ->orderBy('week_number')
+                ->get();
         } else {
             $results = Transactions::select(DB::raw("CONCAT(YEAR(created_at), '-W', LPAD(WEEK(created_at), 2, '0')) as week_number"), DB::raw('SUM(amount) as total_amount'))
-            ->where('user_id', $this->userId()) // Assuming $this->userId() retrieves the current user's ID
-            ->where('is_money_out', $is_money_out)
-            ->whereBetween('created_at', [$startDate, $endDate])
-            ->groupBy('week_number')
-            ->orderBy('week_number')
-            ->get();
+                ->where('user_id', $this->userId()) // Assuming $this->userId() retrieves the current user's ID
+                ->where('is_money_out', $is_money_out)
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->groupBy('week_number')
+                ->orderBy('week_number')
+                ->get();
         }
         // Query to fetch total amount per week for the past 3 months
 
@@ -595,7 +601,7 @@ class TransactionsController extends Controller
         // Get today's date
         $endDate = Carbon::now();
 
-        if($is_money_out == 1){
+        if ($is_money_out == 1) {
             $results = Transactions::select(
                 DB::raw('YEAR(created_at) as year'),
                 DB::raw('MONTH(created_at) as month'),
@@ -604,7 +610,7 @@ class TransactionsController extends Controller
                 ->where('user_id', $this->userId()) // Assuming $this->userId() retrieves the current user's ID
                 ->where('is_money_out', $is_money_out)
                 ->whereBetween('created_at', [$startDate, $endDate])
-                ->whereHas('category', function($query) {
+                ->whereHas('category', function ($query) {
                     $query->where('name', '!=', 'Savings');
                 })
                 ->groupBy('year', 'month')
@@ -627,6 +633,125 @@ class TransactionsController extends Controller
         }
         // Query to fetch total amount per month for the past 12 months
 
+
+        $data = []; // Initialize an empty array to hold data points
+
+        foreach ($results as $result) {
+            $data[] = [
+                'x' => $result->year . "-" . $result->month,
+                'y' => $result->total_amount
+            ];
+        }
+
+        // If no results were found, return a default data point
+        if (empty($data)) {
+            $data[] = [
+                'x' => 'no data yet', // Format current month and day
+                'y' => 0
+            ];
+        }
+
+        // Encode the data array to JSON format for the final return
+        return json_encode($data);
+    }
+
+    public function getDailySavings()
+    {
+
+        $startDate = Carbon::now()->subDays(30)->startOfDay();
+
+        $results = Transactions::with('category')
+            ->select(
+                DB::raw('DATE(created_at) as date'),
+                DB::raw('SUM(amount) as total_amount')
+            )
+            ->where('user_id', $this->userId()) // Assuming $this->userId() retrieves the current user's ID
+            ->whereBetween('created_at', [$startDate, now()]) // Filter transactions within the last 30 days up to the present time
+            ->whereHas('category', function ($query) {
+                $query->where('name', 'Savings');
+            })
+            ->groupBy(DB::raw('DATE(created_at)'))
+            ->orderBy(DB::raw('DATE(created_at)'))
+            ->get();
+
+        $data = []; // Initialize an empty array to hold data points
+
+        foreach ($results as $result) {
+            $data[] = [
+                'x' => $result->date,
+                'y' => $result->total_amount
+            ];
+        }
+
+        // If no results were found, return a default data point
+        if (empty($data)) {
+            $data[] = [
+                'x' => date('M d'), // Format current month and day
+                'y' => 0
+            ];
+        }
+
+        // Encode the data array to JSON format for the final return
+        return json_encode($data);
+    }
+
+    public function getWeeklySavings()
+    {
+        $startDate = now()->subMonths(3); // Get the date 3 months ago from today
+        $endDate = now(); // Today's date
+        $results = Transactions::select(DB::raw("CONCAT(YEAR(created_at), '-W', LPAD(WEEK(created_at), 2, '0')) as week_number"), DB::raw('SUM(amount) as total_amount'))
+            ->where('user_id', $this->userId()) // Assuming $this->userId() retrieves the current user's ID
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->whereHas('category', function ($query) {
+                $query->where('name', 'Savings');
+            })
+            ->groupBy('week_number')
+            ->orderBy('week_number')
+            ->get();
+
+        $data = []; // Initialize an empty array to hold data points
+
+        foreach ($results as $result) {
+            $data[] = [
+                'x' => $result->week_number,
+                'y' => $result->total_amount
+            ];
+        }
+
+        // If no results were found, return a default data point
+        if (empty($data)) {
+            $data[] = [
+                'x' => 'no data yet', // Format current month and day
+                'y' => 0
+            ];
+        }
+
+        // Encode the data array to JSON format for the final return
+        return json_encode($data);
+    }
+
+    public function getMonthlySavings()
+    {
+        // Get the start date (12 months ago from today)
+        $startDate = Carbon::now()->subMonths(12)->startOfMonth();
+
+        // Get today's date
+        $endDate = Carbon::now();
+
+        $results = Transactions::select(
+            DB::raw('YEAR(created_at) as year'),
+            DB::raw('MONTH(created_at) as month'),
+            DB::raw('SUM(amount) as total_amount')
+        )
+            ->where('user_id', $this->userId()) // Assuming $this->userId() retrieves the current user's ID
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->whereHas('category', function ($query) {
+                $query->where('name', 'Savings');
+            })
+            ->groupBy('year', 'month')
+            ->orderBy('year')
+            ->orderBy('month')
+            ->get();
 
         $data = []; // Initialize an empty array to hold data points
 

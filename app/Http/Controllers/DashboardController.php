@@ -44,6 +44,9 @@ class DashboardController extends Controller
             'm_money_in_data' => $trans_controller->getMonthlyAmounts($money_in),
             'largest_spent_cat_name' => $trans_controller->getLargestSpentCategoryName($largest_spent),
             'categories' => $trans_controller->getAllCategories(),
+            'd_savings' => $trans_controller->getDailySavings(),
+            'w_savings' => $trans_controller->getWeeklySavings(),
+            'm_savings' => $trans_controller->getMonthlySavings()
         ];
 
         return view('dashboard', $data);

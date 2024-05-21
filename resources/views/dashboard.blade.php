@@ -1,22 +1,22 @@
 <x-app-layout>
     @php
-        $_budget_type = 0;
+    $_budget_type = 0;
 
-        switch ($budget_type_name) {
-            case 'daily':
-                $_budget_type = 'Day';
-                break;
-            case 'weekly':
-                $_budget_type = 'Week';
-                break;
-            case 'monthly':
-                $_budget_type = 'Month';
-                break;
+    switch ($budget_type_name) {
+    case 'daily':
+    $_budget_type = 'Day';
+    break;
+    case 'weekly':
+    $_budget_type = 'Week';
+    break;
+    case 'monthly':
+    $_budget_type = 'Month';
+    break;
 
-            default:
-                $_budget_type = 'Irror';
-                break;
-        }
+    default:
+    $_budget_type = 'Irror';
+    break;
+    }
     @endphp
 
     <x-slot name="header">
@@ -30,112 +30,110 @@
     </x-slot>
 
     <div class="py-7">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Container for the financial data and "hello" div -->
-            <div class="flex flex-col sm:flex-row justify-between">
+            <div class="flex flex-col space-y-4 lg:space-y-0 lg:flex-row">
                 <!-- Financial data divs -->
-
-                <div
-                    class="flex items-center bg-gradient-to-b from-lime-400 to-green-600 overflow-hidden shadow-md sm:rounded-lg flex-1 mr-4 p-4 text-white">
-
-                    <div class="flex-1">
-                        <p>Total Income</p>
-                        <h2 class="font-semibold text-xl text-white leading-tight">Php
-                            @if ($sum_money_in > 0)
+                <div class="flex-1 grid grid-cols-1 lg:grid-cols-4 gap-4">
+                    <div
+                        class="flex items-center bg-gradient-to-b from-lime-400 to-green-600 overflow-hidden shadow-md rounded-lg p-4 text-white">
+                        <div class="flex-1">
+                            <p>Total Income</p>
+                            <h2 class="font-semibold text-xl text-white leading-tight">Php
+                                @if ($sum_money_in > 0)
                                 {{ number_format($sum_money_in) }}
-                            @else
+                                @else
                                 0.00
-                            @endif
-
-                        </h2>
+                                @endif
+                            </h2>
+                        </div>
+                        <button x-data x-on:click="$dispatch('open-modal', { name: 'money-in-modal' })"
+                            class="flex items-center justify-center w-10 h-10 rounded-full bg-white text-green-600 focus:outline-none focus:ring-2 focus:ring-green-600 shadow-md hover:bg-transparent hover:border-2 hover:border-white hover:text-white hover:transition">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="w-6 h-6"
+                                fill="currentColor">
+                                <path
+                                    d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
+                            </svg>
+                        </button>
                     </div>
-
-                    <button x-data x-on:click="$dispatch('open-modal' , {name : 'money-in-modal'})"
-                        class="flex items-center justify-center w-10 h-10 rounded-full bg-white text-green-600 focus:outline-none focus:ring-2 focus:ring-green-600 shadow-md hover:bg-transparent hover:border-2 hover:border-white hover:text-white hover:transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="w-6 h-6"
-                            fill="currentColor">
-                            <path
-                                d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
-                        </svg>
-                    </button>
-                </div>
-
-                <div
-                    class="flex items-center bg-gradient-to-b from-amber-500 to-orange-600 overflow-hidden shadow-md sm:rounded-lg flex-1 mr-4 p-4 text-white">
-                    <div class="flex-1">
-                        <p>Total Expenses</p>
-                        <h2 class="font-semibold text-xl text-white leading-tight">Php
-                            @if ($sum_money_out > 0)
+                    <div
+                        class="flex items-center bg-gradient-to-b from-amber-500 to-orange-600 overflow-hidden shadow-md rounded-lg p-4 text-white">
+                        <div class="flex-1">
+                            <p>Total Expenses</p>
+                            <h2 class="font-semibold text-xl text-white leading-tight">Php
+                                @if ($sum_money_out > 0)
                                 {{ number_format($sum_money_out) }}
-                            @else
+                                @else
                                 0.00
-                            @endif
-                        </h2>
+                                @endif
+                            </h2>
+                        </div>
+                        <button x-data x-on:click="$dispatch('open-modal', { name: 'money-out-modal' })"
+                            class="flex items-center justify-center w-10 h-10 rounded-full bg-white text-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-600 shadow-md hover:bg-transparent hover:border-2 hover:border-white hover:text-white hover:transition">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="w-6 h-6"
+                                fill="currentColor">
+                                <path
+                                    d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
+                            </svg>
+                        </button>
                     </div>
-                    <button x-data x-on:click="$dispatch('open-modal' , {name : 'money-out-modal'})"
-                        class="flex items-center justify-center w-10 h-10 rounded-full bg-white text-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-600 shadow-md hover:bg-transparent hover:border-2 hover:border-white hover:text-white hover:transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="w-6 h-6"
-                            fill="currentColor">
-                            <path
-                                d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
-                        </svg>
-                    </button>
-                </div>
-                <div
-                    class="flex items-center bg-gradient-to-b from-yellow-400 to-yellow-600 overflow-hidden shadow-md sm:rounded-lg flex-1 mr-4 p-4 text-white">
-                    <div class="flex-1">
-                        <p>Savings</p>
-                        <h2 class="font-semibold text-xl text-white leading-tight">Php
-                            @if ($sum_savings > 0)
+                    <div
+                        class="flex items-center bg-gradient-to-b from-yellow-400 to-yellow-600 overflow-hidden shadow-md rounded-lg p-4 text-white">
+                        <div class="flex-1">
+                            <p>Savings</p>
+                            <h2 class="font-semibold text-xl text-white leading-tight">Php
+                                @if ($sum_savings > 0)
                                 {{ number_format($sum_savings) }}
-                            @else
+                                @else
                                 0.00
-                            @endif
-                        </h2>
+                                @endif
+                            </h2>
+                        </div>
+                        <button x-data x-on:click="$dispatch('open-modal', { name: 'savings-modal' })"
+                            class="flex items-center justify-center w-10 h-10 rounded-full bg-white text-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-600 shadow-md hover:bg-transparent hover:border-2 hover:border-white hover:text-white hover:transition">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="w-6 h-6"
+                                fill="currentColor">
+                                <path
+                                    d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
+                            </svg>
+                        </button>
                     </div>
-                    <button x-data x-on:click="$dispatch('open-modal' , {name : 'savings-modal'})"
-                        class="flex items-center justify-center w-10 h-10 rounded-full bg-white text-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-600 shadow-md hover:bg-transparent hover:border-2 hover:border-white hover:text-white hover:transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="w-6 h-6"
-                            fill="currentColor">
-                            <path
-                                d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
-                        </svg>
-                    </button>
-                </div>
-                <div
-                    class="flex flex-col justify-center bg-gradient-to-b from-slate-500 to-gray-700 overflow-hidden shadow-md sm:rounded-lg flex-1 p-4 text-white">
-                    <p>Largest Spent</p>
-                    <h2 class="font-semibold text-xl text-white leading-tight">Php
-                        @if (isset($largest_spent))
-                            @if ($largest_spent->amount > 0)
+                    <div
+                        class="flex items-center bg-gradient-to-b from-slate-500 to-gray-700 overflow-hidden shadow-md rounded-lg p-4 text-white">
+                        <div class="flex-1">
+                            <p>Largest Spent</p>
+                            <h2 class="font-semibold text-xl text-white leading-tight">Php
+                                @if (isset($largest_spent))
+                                @if ($largest_spent->amount > 0)
                                 {{ number_format($largest_spent->amount) }}
-                            @endif
-                        @else
-                            0.00
-                        @endif
-
-                    </h2>
-                    <p class="font-small">
-                        @if (isset($largest_spent))
-                            {{ $largest_spent_cat_name }}
-                        @else
-                            ---
-                        @endif
-                    </p>
+                                @endif
+                                @else
+                                0.00
+                                @endif
+                            </h2>
+                            <p class="font-small">
+                                @if (isset($largest_spent))
+                                {{ $largest_spent_cat_name }}
+                                @else
+                                ---
+                                @endif
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="my-5 sm:mt-0 flex flex-col sm:flex-row md:flex-row justify-center sm:justify-between">
+            <div class="my-5 sm:mt-0 flex flex-col md:flex-row md:space-x-4">
                 <!-- Chart div -->
-                <div class="mt-4 bg-white p-4 rounded-lg w-full sm:w-2/3 shadow-md flex flex-col ">
+                <div class="mt-4 bg-white p-4 rounded-lg w-full md:w-2/3 shadow-md flex flex-col">
                     <div class="flex items-center justify-between mb-4">
                         <div>
                             <h1 class="font-semibold text-xl">
                                 @php
-                                    $date = date('Y-m-d');
-                                    $month = date('M', strtotime($date));
-                                    $day = date('d', strtotime($date));
-                                    $day_w = date('D', strtotime($date));
+                                $date = date('Y-m-d');
+                                $month = date('M', strtotime($date));
+                                $day = date('d', strtotime($date));
+                                $day_w = date('D', strtotime($date));
                                 @endphp
                                 {{ $month }} {{ $day }}, {{ $day_w }}
                             </h1>
@@ -145,23 +143,22 @@
                             <div
                                 class="absolute indicator w-28 bottom-0 top-0 left-0 rounded-xl my-auto h-11 bg-gray-600 shadow-sm">
                             </div>
-                            <button role="tab" aria-selected="false" aria-controls="tabpanel-1" id="tab-1"
-                                tabindex="0" class="relative block h-10 px-6 tab rounded-xl">
+                            <button role="tab" aria-selected="false" aria-controls="tabpanel-1" id="tab-1" tabindex="0"
+                                class="relative block h-10 px-6 tab rounded-xl">
                                 <span class="text-white">Daily</span>
                             </button>
-                            <button role="tab" aria-selected="false" aria-controls="tabpanel-2" id="tab-2"
-                                tabindex="0" class="relative block h-10 px-6 tab rounded-xl">
+                            <button role="tab" aria-selected="false" aria-controls="tabpanel-2" id="tab-2" tabindex="0"
+                                class="relative block h-10 px-6 tab rounded-xl">
                                 <span class="text-gray-500">Weekly</span>
                             </button>
-                            <button role="tab" aria-selected="false" aria-controls="tabpanel-3" id="tab-3"
-                                tabindex="0" class="relative block h-10 px-6 tab rounded-xl">
+                            <button role="tab" aria-selected="false" aria-controls="tabpanel-3" id="tab-3" tabindex="0"
+                                class="relative block h-10 px-6 tab rounded-xl">
                                 <span class="text-gray-500">Monthly</span>
                             </button>
                         </div>
                     </div>
                     <div>
-
-                        <div class="tab-panel " role="tabpanel" id="tabpanel-1">
+                        <div class="tab-panel" role="tabpanel" id="tabpanel-1">
                             <canvas id="dailyChart"></canvas>
                         </div>
                         <div class="tab-panel hidden opacity-0" role="tabpanel" id="tabpanel-2">
@@ -171,19 +168,18 @@
                             <canvas id="monthlyChart"></canvas>
                         </div>
                     </div>
-
                 </div>
 
                 <!-- Other div -->
-                <div class="mt-4 bg-white p-4 shadow-md rounded-lg w-full sm:w-1/3 sm:ml-4">
+                <div class="mt-4 bg-white p-4 shadow-md rounded-lg w-full md:w-1/2 lg:w-1/3 lg:order-last">
                     <div class="flex justify-between">
                         <div>
-                            <h1 class="font-light text-xl mb-1">Budget Status</h1>
-                            <h1 class="font-black text-2xl">Php {{ $sum_money_out }} / {{ $alloc_budget }}</h1>
+                            <h1 class="font-light mb-1">Budget Status</h1>
+                            <h1 class="font-black text-xl">Php {{ $sum_money_out }} / {{ $alloc_budget }}</h1>
                             @if ($sum_money_out > $alloc_budget)
-                                <h1 class="text-red-600 font-medium">You exceeded your allocated budget this
-                                    {{ $_budget_type }}</h1>
-                                <h1 class="text-red-600 text-sm">It looks like you have been spending a lot</h1>
+                            <h1 class="text-red-600 font-medium">You exceeded your allocated budget this {{
+                                $_budget_type }}</h1>
+                            <h1 class="text-red-600 text-sm">It looks like you have been spending a lot</h1>
                             @endif
                         </div>
                         <div>
@@ -192,52 +188,46 @@
                             </x-nav-link>
                         </div>
                     </div>
-
                     <div class="scroll-smooth max-h-96 snap-y overflow-y-auto">
                         @foreach ($budget_portions as $budget_portion)
-                            @php
-                                $percentage =
-                                    ($trans_with_category[$budget_portion->category->name] / $budget_portion->portion) *
-                                    100;
-
-                                if ($percentage > 100) {
-                                    $percentage = 100;
-                                }
-                            @endphp
-                            <div
-                                class="bg-gray-100 shadow-md rounded-full py-1 px-4 mt-3 flex items-center snap-center">
-                                <div class="w-2/5 pr-4">
-                                    <h1 class="flex items-center font-small text-sm">
-                                        <i class="mr-4 fa-solid {{ $budget_portion->category->icon }}"></i>
-                                        {{ $budget_portion->category->name }}
-                                    </h1>
-                                </div>
-
-                                <div class="w-3/5 relative">
-                                    <div class="h-4 bg-white rounded-full w-full">
-                                        <!-- Adjust width based on progress percentage -->
-                                        <div class="h-full
+                        @php
+                        $percentage = ($trans_with_category[$budget_portion->category->name] / $budget_portion->portion)
+                        * 100;
+                        if ($percentage > 100) {
+                        $percentage = 100;
+                        }
+                        @endphp
+                        <div class="bg-gray-100 shadow-md rounded-full py-1 px-4 mt-3 flex items-center snap-center">
+                            <div class="w-2/5 pr-4">
+                                <h1 class="flex items-center font-small text-sm">
+                                    <i class="mr-4 fa-solid {{ $budget_portion->category->icon }}"></i>
+                                    {{ $budget_portion->category->name }}
+                                </h1>
+                            </div>
+                            <div class="w-3/5 relative">
+                                <div class="h-4 bg-white rounded-full w-full">
+                                    <div class="h-full
                                             @if ($percentage < 60) bg-green-500
                                             @elseif ($percentage >= 60 && $percentage < 90) bg-orange-500
                                             @else bg-red-500 @endif
-                                            rounded-full"
-                                            style="width: {{ $percentage }}%;"></div>
-                                    </div>
-                                    <div class="flex justify-between text-sm mt-1">
-                                        <span>Php {{ $trans_with_category[$budget_portion->category->name] }}</span>
-                                        <span>/ {{ $budget_portion->portion }}</span>
-                                    </div>
+                                            rounded-full" style="width: {{ $percentage }}%;"></div>
+                                </div>
+                                <div class="flex justify-between text-sm mt-1">
+                                    <span>Php {{ $trans_with_category[$budget_portion->category->name] }}</span>
+                                    <span>/ {{ $budget_portion->portion }}</span>
                                 </div>
                             </div>
+                        </div>
                         @endforeach
                     </div>
-
                 </div>
+
             </div>
-
         </div>
-
     </div>
+
+
+
 
     <x-my-modal name="money-in-modal" width="max-w-lg" height="310">
         <x-slot name="header">
@@ -286,8 +276,8 @@
                                 class="w-full text-black border border-gray-300 rounded-md py-2 px-4 mb-3 cursor-pointer"
                                 name="category">
                                 @foreach ($user_portion_categories as $user_portion_category)
-                                    <option value="{{ $user_portion_category->category->id }}">
-                                        {{ $user_portion_category->category->name }}</option>
+                                <option value="{{ $user_portion_category->category->id }}">
+                                    {{ $user_portion_category->category->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -413,6 +403,15 @@
                         pointRadius: 0.3,
                         // fill: true
                     },
+                    {
+                        label: 'Savings',
+                        data: <?php echo $d_savings; ?>,
+                        borderColor: 'rgb(250, 204, 21)',
+                        backgroundColor: 'rgba(250, 204, 21)',
+                        borderWidth: 3,
+                        pointRadius: 0.3,
+                        // fill: true
+                    },
 
 
                 ],
@@ -472,6 +471,15 @@
                         pointRadius: 0.3,
                         // fill: true
                     },
+                    {
+                        label: 'Savings',
+                        data: <?php echo $w_savings; ?>,
+                        borderColor: 'rgb(250, 204, 21)',
+                        backgroundColor: 'rgba(250, 204, 21)',
+                        borderWidth: 3,
+                        pointRadius: 0.3,
+                        // fill: true
+                    },
 
                 ],
 
@@ -517,6 +525,15 @@
                         data: <?php echo $m_money_out_data; ?>,
                         borderColor: 'rgb(234, 88, 12)',
                         backgroundColor: 'rgba(234, 88, 12, 0.3)',
+                        borderWidth: 3,
+                        pointRadius: 0.3,
+                        // fill: true
+                    },
+                    {
+                        label: 'Savings',
+                        data: <?php echo $m_savings; ?>,
+                        borderColor: 'rgb(250, 204, 21)',
+                        backgroundColor: 'rgba(250, 204, 21)',
                         borderWidth: 3,
                         pointRadius: 0.3,
                         // fill: true
