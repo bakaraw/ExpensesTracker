@@ -66,7 +66,7 @@
                         <div class="bg-white rounded-lg shadow-md p-4">
                             <div class="flex justify-between items-end mb-3">
                                 <h1 class="font-semibold text-lg">
-                                    Insights Summary
+                                    Insights
                                 </h1>
                                 <select id="chartSelector" class="w-36 text-black border border-gray-300 rounded-md py-1 px-4 cursor-pointer">
                                     <option value="1">Daily</option>

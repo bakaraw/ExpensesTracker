@@ -55,7 +55,6 @@ class TransactionsController extends Controller
 
         return view('transactions', $datas);
     }
-
     public function filterByDate(Request $request, SafeSubmit $safeSubmit)
     {
         $startDate = $request->input('startDate');

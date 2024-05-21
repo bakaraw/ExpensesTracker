@@ -3,6 +3,7 @@
 use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\BudgetPortionsController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\InsightsController;
 use App\Http\Controllers\NewUserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Middleware\HandleSafeSubmit;
@@ -17,6 +18,7 @@ Route::get('/', function () {
 Route::get('/dashboard',  [DashboardController::class, 'index'])->middleware(['auth', 'verified', NewUser::class])->name('dashboard');
 Route::get('/budgeting',  [BudgetPortionsController::class, 'index'])->middleware(['auth', 'verified', NewUser::class])->name('budgeting');
 Route::get('/transactions',  [TransactionsController::class, 'index'])->middleware(['auth', 'verified', NewUser::class])->name('transactions');
+Route::get('/insights',  [InsightsController::class, 'index'])->middleware(['auth', 'verified', NewUser::class])->name('insights');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

@@ -151,7 +151,11 @@
                                         }
                                     @endphp
                                     <p class="my-7 mx-2">
+                                        @if($largest_portion_expense_category != null)
                                         You have been spending a lot on <strong>{{ $largest_portion_expense_category }}</strong> with a total expense of <strong>Php {{ number_format($largest_portion_expense_sum) }}</strong>.
+                                        @else
+                                        No data
+                                        @endif
                                     </p>
                                 </div>
                             </div>
