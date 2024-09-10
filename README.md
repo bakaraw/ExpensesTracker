@@ -11,7 +11,7 @@
 2. Download laravel. refer here https://laravel.com/docs/11.x/installation
     - in downloading laravel, you need to download [Composer](https://getcomposer.org/download/)
 3. Install node js. refer here https://nodejs.org/en/download/package-manager 
-4. Install php version "> 8.2.23"
+4. Install php version ">= 8.2.23"
     - add environment variable that contans the php.exe file. Example. "C:\php"
     - edit php.ini file. uncomment line ";extension=mysqli" and ";extension=pdo_mysql". You can uncomment by removing the semi-colon ';'
 6. Install XAMPP
