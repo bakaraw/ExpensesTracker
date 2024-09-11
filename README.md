@@ -16,7 +16,7 @@
 6. Install XAMPP
 7. Open xampp and start Apache and MySQL
 8. go to the project directory and open it in your VS code
-9. In the project directory, create `.env` file and copy the contents of `.example-env` into the `.env` file
+9. In the project directory, create `.env` file and copy the contents of `.env.example` into the `.env` file
 10. Open terminal (cmd or powershell) then run `php artisan migrate`. This builds the database schema
 11. Run `php artisan db:seed` to populate database with default data.
 12. Run `npm run dev`. NOTE: do not terminate this command. This is needed for the front end.
