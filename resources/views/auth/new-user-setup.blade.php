@@ -1,4 +1,4 @@
-<x-newuser-layout>
+<x-new-user-layout>
     <div class="flex justify-left w-full sm:max-w-md mt-6 px-6 py-4 bg-gray-400 shadow-md overflow-hidden sm:rounded-lg bg-opacity-25">
         <form action="{{ route('new_user.submit') }}" method="post" class="w-full">
             @csrf
@@ -16,4 +16,4 @@
             <button class="w-full rounded-full py-3 px-6 bg-yellow-500" type="submit">Next</button>
         </form>
     </div>
-</x-newuser-layout>
+</x-new-user-layout>

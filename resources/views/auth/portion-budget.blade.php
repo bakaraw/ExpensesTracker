@@ -1,4 +1,4 @@
-<x-newuser-layout>
+<x-new-user-layout>
     <div class="bg-gray-500 bg-opacity-15 p-5 shadow-md rounded-lg grid grid-cols-3">
         <h1 class="text-4xl font-black uppercase col-span-3">Portion Budget</h1>
 
@@ -129,4 +129,4 @@
     </div>
 
 
-</x-newuser-layout>
+</x-new-user-layout>
